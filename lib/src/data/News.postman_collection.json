@@ -1,0 +1,52 @@
+{
+	"info": {
+		"_postman_id": "b24bc974-d22b-4a49-af56-3d3012f3a58a",
+		"name": "News",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "33547118",
+		"_collection_link": "https://lively-shuttle-632117.postman.co/workspace/PravasiTax~50b692d6-3177-4936-82cb-c6a20e12fe7a/collection/5679577-b24bc974-d22b-4a49-af56-3d3012f3a58a?action=share&source=collection_link&creator=33547118"
+	},
+	"item": [
+		{
+			"name": "get Request",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "M6nBvCxAiL9d8eFgHjKmPqRs",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://pravasitax.com/api/news/get?limit=10&skip=2",
+					"protocol": "https",
+					"host": [
+						"pravasitax",
+						"com"
+					],
+					"path": [
+						"api",
+						"news",
+						"get"
+					],
+					"query": [
+						{
+							"key": "limit",
+							"value": "10"
+						},
+						{
+							"key": "skip",
+							"value": "2"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

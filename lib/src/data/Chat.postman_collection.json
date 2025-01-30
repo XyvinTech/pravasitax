@@ -1,0 +1,453 @@
+{
+	"info": {
+		"_postman_id": "82491964-af18-4dcf-a589-fc8e79294c61",
+		"name": "Chat",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "33547118",
+		"_collection_link": "https://lively-shuttle-632117.postman.co/workspace/PravasiTax~50b692d6-3177-4936-82cb-c6a20e12fe7a/collection/5679577-82491964-af18-4dcf-a589-fc8e79294c61?action=share&source=collection_link&creator=33547118"
+	},
+	"item": [
+		{
+			"name": "Create Conversation",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "M6nBvCxAiL9d8eFgHjKmPqRs",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "User-Token",
+						"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE3MzE5MDk5NTAsImV4cCI6MTc2MzAxMzk1MCwiaWQiOiI2NmZlYTZlNTM1ZDQxZTQxY2E3MjVmMzIiLCJuYW1lIjoiU2Fpam8gR2VvcmdlIiwiZW1haWwiOiJzYWlqb0BjYXBpdGFpcmUuY29tIn0.gI-7QRIjGJBVdOTTdy88__Hlutvb5X55YmL66i_cFEw",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "conversation_title",
+							"value": "test convesation",
+							"type": "text"
+						},
+						{
+							"key": "conversation_type",
+							"value": "Sales",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "https://pravasitax.com/api/chat/conversations/create",
+					"protocol": "https",
+					"host": [
+						"pravasitax",
+						"com"
+					],
+					"path": [
+						"api",
+						"chat",
+						"conversations",
+						"create"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Conversations",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "M6nBvCxAiL9d8eFgHjKmPqRs",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "User-Token",
+						"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE3MzE5MDk5NTAsImV4cCI6MTc2MzAxMzk1MCwiaWQiOiI2NmZlYTZlNTM1ZDQxZTQxY2E3MjVmMzIiLCJuYW1lIjoiU2Fpam8gR2VvcmdlIiwiZW1haWwiOiJzYWlqb0BjYXBpdGFpcmUuY29tIn0.gI-7QRIjGJBVdOTTdy88__Hlutvb5X55YmL66i_cFEw",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": []
+				},
+				"url": {
+					"raw": "https://pravasitax.com/api/chat/conversations/get",
+					"protocol": "https",
+					"host": [
+						"pravasitax",
+						"com"
+					],
+					"path": [
+						"api",
+						"chat",
+						"conversations",
+						"get"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Assign Staff to Conversation",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "M6nBvCxAiL9d8eFgHjKmPqRs",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "User-Token",
+						"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE3MzE5MDk5NTAsImV4cCI6MTc2MzAxMzk1MCwiaWQiOiI2NmZlYTZlNTM1ZDQxZTQxY2E3MjVmMzIiLCJuYW1lIjoiU2Fpam8gR2VvcmdlIiwiZW1haWwiOiJzYWlqb0BjYXBpdGFpcmUuY29tIn0.gI-7QRIjGJBVdOTTdy88__Hlutvb5X55YmL66i_cFEw",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "conversation_id",
+							"value": "676121ee91fee5015707ebc5",
+							"type": "text"
+						},
+						{
+							"key": "staff_id",
+							"value": "6751691d92738d60e10ed9b3",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "https://pravasitax.com/api/chat/conversations/assign-staff-to-conversation",
+					"protocol": "https",
+					"host": [
+						"pravasitax",
+						"com"
+					],
+					"path": [
+						"api",
+						"chat",
+						"conversations",
+						"assign-staff-to-conversation"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Mark Conversation as completed",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "M6nBvCxAiL9d8eFgHjKmPqRs",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "User-Token",
+						"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE3MzE5MDk5NTAsImV4cCI6MTc2MzAxMzk1MCwiaWQiOiI2NmZlYTZlNTM1ZDQxZTQxY2E3MjVmMzIiLCJuYW1lIjoiU2Fpam8gR2VvcmdlIiwiZW1haWwiOiJzYWlqb0BjYXBpdGFpcmUuY29tIn0.gI-7QRIjGJBVdOTTdy88__Hlutvb5X55YmL66i_cFEw",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "conversation_id",
+							"value": "",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "https://pravasitax.com/api/chat/conversations/mark-as-completed",
+					"protocol": "https",
+					"host": [
+						"pravasitax",
+						"com"
+					],
+					"path": [
+						"api",
+						"chat",
+						"conversations",
+						"mark-as-completed"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Messages Send",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "M6nBvCxAiL9d8eFgHjKmPqRs",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "User-Token",
+						"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE3MzE5MDk5NTAsImV4cCI6MTc2MzAxMzk1MCwiaWQiOiI2NmZlYTZlNTM1ZDQxZTQxY2E3MjVmMzIiLCJuYW1lIjoiU2Fpam8gR2VvcmdlIiwiZW1haWwiOiJzYWlqb0BjYXBpdGFpcmUuY29tIn0.gI-7QRIjGJBVdOTTdy88__Hlutvb5X55YmL66i_cFEw",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "conversation_id",
+							"value": "676121ee91fee5015707ebc5",
+							"type": "text"
+						},
+						{
+							"key": "message",
+							"value": "test message",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "https://pravasitax.com/api/chat/messages/send",
+					"protocol": "https",
+					"host": [
+						"pravasitax",
+						"com"
+					],
+					"path": [
+						"api",
+						"chat",
+						"messages",
+						"send"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Messages",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "M6nBvCxAiL9d8eFgHjKmPqRs",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "User-Token",
+						"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE3MzE5MDk5NTAsImV4cCI6MTc2MzAxMzk1MCwiaWQiOiI2NmZlYTZlNTM1ZDQxZTQxY2E3MjVmMzIiLCJuYW1lIjoiU2Fpam8gR2VvcmdlIiwiZW1haWwiOiJzYWlqb0BjYXBpdGFpcmUuY29tIn0.gI-7QRIjGJBVdOTTdy88__Hlutvb5X55YmL66i_cFEw",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "https://pravasitax.com/api/chat/messages/get?conversation_id=676121ee91fee5015707ebc5",
+					"protocol": "https",
+					"host": [
+						"pravasitax",
+						"com"
+					],
+					"path": [
+						"api",
+						"chat",
+						"messages",
+						"get"
+					],
+					"query": [
+						{
+							"key": "conversation_id",
+							"value": "676121ee91fee5015707ebc5"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Mark message as completed",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "M6nBvCxAiL9d8eFgHjKmPqRs",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "User-Token",
+						"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE3MzE5MDk5NTAsImV4cCI6MTc2MzAxMzk1MCwiaWQiOiI2NmZlYTZlNTM1ZDQxZTQxY2E3MjVmMzIiLCJuYW1lIjoiU2Fpam8gR2VvcmdlIiwiZW1haWwiOiJzYWlqb0BjYXBpdGFpcmUuY29tIn0.gI-7QRIjGJBVdOTTdy88__Hlutvb5X55YmL66i_cFEw",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "message_id",
+							"value": "",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "https://pravasitax.com/api/chat/message/mark-as-delivered",
+					"protocol": "https",
+					"host": [
+						"pravasitax",
+						"com"
+					],
+					"path": [
+						"api",
+						"chat",
+						"message",
+						"mark-as-delivered"
+					],
+					"query": [
+						{
+							"key": "",
+							"value": null,
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Mark message as read",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "M6nBvCxAiL9d8eFgHjKmPqRs",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "User-Token",
+						"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE3MzE5MDk5NTAsImV4cCI6MTc2MzAxMzk1MCwiaWQiOiI2NmZlYTZlNTM1ZDQxZTQxY2E3MjVmMzIiLCJuYW1lIjoiU2Fpam8gR2VvcmdlIiwiZW1haWwiOiJzYWlqb0BjYXBpdGFpcmUuY29tIn0.gI-7QRIjGJBVdOTTdy88__Hlutvb5X55YmL66i_cFEw",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "message_id",
+							"value": "",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "https://pravasitax.com/api/chat/message/mark-as-read",
+					"protocol": "https",
+					"host": [
+						"pravasitax",
+						"com"
+					],
+					"path": [
+						"api",
+						"chat",
+						"message",
+						"mark-as-read"
+					],
+					"query": [
+						{
+							"key": "",
+							"value": null,
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "https://pushnotifications.pravasitax.com/register-fcm-token",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"userId\":\"sdfasdsdafa\",\n    \"fcmToken\" : \"sfasdfasdfasfasdfasd\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://pushnotifications.pravasitax.com/register-fcm-token",
+					"protocol": "https",
+					"host": [
+						"pushnotifications",
+						"pravasitax",
+						"com"
+					],
+					"path": [
+						"register-fcm-token"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

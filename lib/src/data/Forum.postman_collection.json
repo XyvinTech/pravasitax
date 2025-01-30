@@ -1,0 +1,421 @@
+{
+	"info": {
+		"_postman_id": "322bf3e7-0118-4d5c-8884-dafb413ec157",
+		"name": "Forum",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "33547118",
+		"_collection_link": "https://lively-shuttle-632117.postman.co/workspace/PravasiTax~50b692d6-3177-4936-82cb-c6a20e12fe7a/collection/5679577-322bf3e7-0118-4d5c-8884-dafb413ec157?action=share&source=collection_link&creator=33547118"
+	},
+	"item": [
+		{
+			"name": "Get categories",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "M6nBvCxAiL9d8eFgHjKmPqRs",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "User-Token",
+						"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE3MzE5MDk5NTAsImV4cCI6MTc2MzAxMzk1MCwiaWQiOiI2NmZlYTZlNTM1ZDQxZTQxY2E3MjVmMzIiLCJuYW1lIjoiU2Fpam8gR2VvcmdlIiwiZW1haWwiOiJzYWlqb0BjYXBpdGFpcmUuY29tIn0.gI-7QRIjGJBVdOTTdy88__Hlutvb5X55YmL66i_cFEw",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "https://pravasitax.com/api/forum/categories/get",
+					"protocol": "https",
+					"host": [
+						"pravasitax",
+						"com"
+					],
+					"path": [
+						"api",
+						"forum",
+						"categories",
+						"get"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Threads Create",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "M6nBvCxAiL9d8eFgHjKmPqRs",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "User-Token",
+						"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE3MzE5MDk5NTAsImV4cCI6MTc2MzAxMzk1MCwiaWQiOiI2NmZlYTZlNTM1ZDQxZTQxY2E3MjVmMzIiLCJuYW1lIjoiU2Fpam8gR2VvcmdlIiwiZW1haWwiOiJzYWlqb0BjYXBpdGFpcmUuY29tIn0.gI-7QRIjGJBVdOTTdy88__Hlutvb5X55YmL66i_cFEw",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "title",
+							"value": "Sample Thread",
+							"type": "text"
+						},
+						{
+							"key": "description",
+							"value": "Sample Thread Description ",
+							"type": "text"
+						},
+						{
+							"key": "category_id",
+							"value": "forum67614b3cd64390",
+							"type": "text"
+						},
+						{
+							"key": "post_image",
+							"description": "not required, only if image needs to be uploaded",
+							"type": "file",
+							"src": []
+						}
+					]
+				},
+				"url": {
+					"raw": "https://pravasitax.com/api//forum/threads/create",
+					"protocol": "https",
+					"host": [
+						"pravasitax",
+						"com"
+					],
+					"path": [
+						"api",
+						"",
+						"forum",
+						"threads",
+						"create"
+					]
+				},
+				"description": "updatable fields with example values {\"name\":\"saijo\",\"mobile\":\"34523452345\",\"country_code\":\"+91\",\"residing_country\":\"China\"}\n\nsend token you recieved via verify otp via header 'User-Token'"
+			},
+			"response": []
+		},
+		{
+			"name": "Get Threads",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "M6nBvCxAiL9d8eFgHjKmPqRs",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "User-Token",
+						"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE3MzE5MDk5NTAsImV4cCI6MTc2MzAxMzk1MCwiaWQiOiI2NmZlYTZlNTM1ZDQxZTQxY2E3MjVmMzIiLCJuYW1lIjoiU2Fpam8gR2VvcmdlIiwiZW1haWwiOiJzYWlqb0BjYXBpdGFpcmUuY29tIn0.gI-7QRIjGJBVdOTTdy88__Hlutvb5X55YmL66i_cFEw",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "https://pravasitax.com/api/forum/threads/get?category_id=forum67614b3cd64390",
+					"protocol": "https",
+					"host": [
+						"pravasitax",
+						"com"
+					],
+					"path": [
+						"api",
+						"forum",
+						"threads",
+						"get"
+					],
+					"query": [
+						{
+							"key": "category_id",
+							"value": "forum67614b3cd64390"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Mark Thread as closed",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "M6nBvCxAiL9d8eFgHjKmPqRs",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "User-Token",
+						"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE3MzE5MDk5NTAsImV4cCI6MTc2MzAxMzk1MCwiaWQiOiI2NmZlYTZlNTM1ZDQxZTQxY2E3MjVmMzIiLCJuYW1lIjoiU2Fpam8gR2VvcmdlIiwiZW1haWwiOiJzYWlqb0BjYXBpdGFpcmUuY29tIn0.gI-7QRIjGJBVdOTTdy88__Hlutvb5X55YmL66i_cFEw",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "thread_id",
+							"value": "",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "https://pravasitax.com/api/forum/threads/mark-as-closed",
+					"protocol": "https",
+					"host": [
+						"pravasitax",
+						"com"
+					],
+					"path": [
+						"api",
+						"forum",
+						"threads",
+						"mark-as-closed"
+					],
+					"query": [
+						{
+							"key": "",
+							"value": null,
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Posts Create",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "M6nBvCxAiL9d8eFgHjKmPqRs",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "User-Token",
+						"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE3MzE5MDk5NTAsImV4cCI6MTc2MzAxMzk1MCwiaWQiOiI2NmZlYTZlNTM1ZDQxZTQxY2E3MjVmMzIiLCJuYW1lIjoiU2Fpam8gR2VvcmdlIiwiZW1haWwiOiJzYWlqb0BjYXBpdGFpcmUuY29tIn0.gI-7QRIjGJBVdOTTdy88__Hlutvb5X55YmL66i_cFEw",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "thread_id",
+							"value": "676156310f3b476f720f1452",
+							"type": "text"
+						},
+						{
+							"key": "post_content",
+							"value": "reply reply",
+							"type": "text"
+						},
+						{
+							"key": "parent_post_id",
+							"value": "6761579b34efe70ad20b1a96",
+							"description": "not required, only if post is reply to another post",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "https://pravasitax.com/api/forum/posts/create",
+					"protocol": "https",
+					"host": [
+						"pravasitax",
+						"com"
+					],
+					"path": [
+						"api",
+						"forum",
+						"posts",
+						"create"
+					]
+				},
+				"description": "updatable fields with example values {\"name\":\"saijo\",\"mobile\":\"34523452345\",\"country_code\":\"+91\",\"residing_country\":\"China\"}\n\nsend token you recieved via verify otp via header 'User-Token'"
+			},
+			"response": []
+		},
+		{
+			"name": "Mark Thread as deleted",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "M6nBvCxAiL9d8eFgHjKmPqRs",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "User-Token",
+						"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE3MzE5MDk5NTAsImV4cCI6MTc2MzAxMzk1MCwiaWQiOiI2NmZlYTZlNTM1ZDQxZTQxY2E3MjVmMzIiLCJuYW1lIjoiU2Fpam8gR2VvcmdlIiwiZW1haWwiOiJzYWlqb0BjYXBpdGFpcmUuY29tIn0.gI-7QRIjGJBVdOTTdy88__Hlutvb5X55YmL66i_cFEw",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "thread_id",
+							"value": "",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "https://pravasitax.com/api/forum/threads/mark-as-closed",
+					"protocol": "https",
+					"host": [
+						"pravasitax",
+						"com"
+					],
+					"path": [
+						"api",
+						"forum",
+						"threads",
+						"mark-as-closed"
+					],
+					"query": [
+						{
+							"key": "",
+							"value": null,
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Posts",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "M6nBvCxAiL9d8eFgHjKmPqRs",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "User-Token",
+						"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE3MzE5MDk5NTAsImV4cCI6MTc2MzAxMzk1MCwiaWQiOiI2NmZlYTZlNTM1ZDQxZTQxY2E3MjVmMzIiLCJuYW1lIjoiU2Fpam8gR2VvcmdlIiwiZW1haWwiOiJzYWlqb0BjYXBpdGFpcmUuY29tIn0.gI-7QRIjGJBVdOTTdy88__Hlutvb5X55YmL66i_cFEw",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "https://pravasitax.com/api/forum/posts/get?thread_id=676156310f3b476f720f1452",
+					"protocol": "https",
+					"host": [
+						"pravasitax",
+						"com"
+					],
+					"path": [
+						"api",
+						"forum",
+						"posts",
+						"get"
+					],
+					"query": [
+						{
+							"key": "thread_id",
+							"value": "676156310f3b476f720f1452"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get replies",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "M6nBvCxAiL9d8eFgHjKmPqRs",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "User-Token",
+						"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE3MzE5MDk5NTAsImV4cCI6MTc2MzAxMzk1MCwiaWQiOiI2NmZlYTZlNTM1ZDQxZTQxY2E3MjVmMzIiLCJuYW1lIjoiU2Fpam8gR2VvcmdlIiwiZW1haWwiOiJzYWlqb0BjYXBpdGFpcmUuY29tIn0.gI-7QRIjGJBVdOTTdy88__Hlutvb5X55YmL66i_cFEw",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "https://pravasitax.com/api/forum/posts/getReplies?thread_id=676156310f3b476f720f1452&parent_post_id=6761579b34efe70ad20b1a96",
+					"protocol": "https",
+					"host": [
+						"pravasitax",
+						"com"
+					],
+					"path": [
+						"api",
+						"forum",
+						"posts",
+						"getReplies"
+					],
+					"query": [
+						{
+							"key": "thread_id",
+							"value": "676156310f3b476f720f1452"
+						},
+						{
+							"key": "parent_post_id",
+							"value": "6761579b34efe70ad20b1a96"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

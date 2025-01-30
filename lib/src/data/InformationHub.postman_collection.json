@@ -1,0 +1,194 @@
+{
+	"info": {
+		"_postman_id": "0b88f8e3-88d2-44b5-865d-9f12469ee15f",
+		"name": "InformationHub",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "33547118",
+		"_collection_link": "https://lively-shuttle-632117.postman.co/workspace/PravasiTax~50b692d6-3177-4936-82cb-c6a20e12fe7a/collection/5679577-0b88f8e3-88d2-44b5-865d-9f12469ee15f?action=share&source=collection_link&creator=33547118"
+	},
+	"item": [
+		{
+			"name": "articles-list",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "M6nBvCxAiL9d8eFgHjKmPqRs",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": []
+				},
+				"url": {
+					"raw": "https://pravasitax.com/api/information-hub/articles-list?limit=10&skip=2&category=general&sub_category=gift-and-cash",
+					"protocol": "https",
+					"host": [
+						"pravasitax",
+						"com"
+					],
+					"path": [
+						"api",
+						"information-hub",
+						"articles-list"
+					],
+					"query": [
+						{
+							"key": "limit",
+							"value": "10"
+						},
+						{
+							"key": "skip",
+							"value": "2"
+						},
+						{
+							"key": "category",
+							"value": "general"
+						},
+						{
+							"key": "sub_category",
+							"value": "gift-and-cash"
+						}
+					]
+				},
+				"description": "All parameters are optional:\n\n- To get a list of articles in a specific category, pass the `category` parameter.\n    \n- To get articles by both `category` and `sub_category`, pass both parameters.\n    \n- If neither `category` nor `sub_category` is passed, all articles will be returned, sorted by the published date.\n    \n- Use the `skip` and `limit` parameters for pagination. By default, `skip` is set to `0` and `limit` is set to `10`.\n    \n- Both `category` and `sub_category` should be passed in lowercase, with spaces replaced by hyphens (`-`)."
+			},
+			"response": []
+		},
+		{
+			"name": "get-category-sub-category-list",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "M6nBvCxAiL9d8eFgHjKmPqRs",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "limit",
+							"value": "5",
+							"type": "text"
+						},
+						{
+							"key": "skip",
+							"value": "1",
+							"type": "text"
+						},
+						{
+							"key": "category",
+							"value": "general",
+							"type": "text"
+						},
+						{
+							"key": "sub_category",
+							"value": "Taxable Income",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "https://pravasitax.com/api/information-hub/get-category-sub-category-list",
+					"protocol": "https",
+					"host": [
+						"pravasitax",
+						"com"
+					],
+					"path": [
+						"api",
+						"information-hub",
+						"get-category-sub-category-list"
+					]
+				},
+				"description": "List of all categories and sub categories"
+			},
+			"response": []
+		},
+		{
+			"name": "get-article",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "M6nBvCxAiL9d8eFgHjKmPqRs",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "limit",
+							"value": "5",
+							"type": "text"
+						},
+						{
+							"key": "skip",
+							"value": "1",
+							"type": "text"
+						},
+						{
+							"key": "category",
+							"value": "general",
+							"type": "text"
+						},
+						{
+							"key": "sub_category",
+							"value": "Taxable Income",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "https://pravasitax.com/api/information-hub/get-article?id=B66ffce70d34da",
+					"protocol": "https",
+					"host": [
+						"pravasitax",
+						"com"
+					],
+					"path": [
+						"api",
+						"information-hub",
+						"get-article"
+					],
+					"query": [
+						{
+							"key": "id",
+							"value": "B66ffce70d34da"
+						}
+					]
+				},
+				"description": "to get article data, pass id or _id"
+			},
+			"response": []
+		}
+	]
+}

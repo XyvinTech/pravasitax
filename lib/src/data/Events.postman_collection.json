@@ -1,0 +1,90 @@
+{
+	"info": {
+		"_postman_id": "4a3011f4-77d1-4e90-bc71-e534ecb035d6",
+		"name": "Events",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "33547118",
+		"_collection_link": "https://lively-shuttle-632117.postman.co/workspace/PravasiTax~50b692d6-3177-4936-82cb-c6a20e12fe7a/collection/5679577-4a3011f4-77d1-4e90-bc71-e534ecb035d6?action=share&source=collection_link&creator=33547118"
+	},
+	"item": [
+		{
+			"name": "book",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "M6nBvCxAiL9d8eFgHjKmPqRs",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "User-Token",
+						"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE3MzE5MDk5NTAsImV4cCI6MTc2MzAxMzk1MCwiaWQiOiI2NmZlYTZlNTM1ZDQxZTQxY2E3MjVmMzIiLCJuYW1lIjoiU2Fpam8gR2VvcmdlIiwiZW1haWwiOiJzYWlqb0BjYXBpdGFpcmUuY29tIn0.gI-7QRIjGJBVdOTTdy88__Hlutvb5X55YmL66i_cFEw",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "data",
+							"value": "{\"event\":\"evevnt_id\",\"seats\":1}",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "https://pravasitax.com/api/evevnt-booking/book",
+					"protocol": "https",
+					"host": [
+						"pravasitax",
+						"com"
+					],
+					"path": [
+						"api",
+						"evevnt-booking",
+						"book"
+					]
+				},
+				"description": "The available fields are `event_id` and `seats`. The `event_id` represents the ID of the event, and `seats` will default to 1. If the event type is _offline_, prompt the user to enter the number of seats. If the event price is 0, display a message stating that the seat is booked, as it is a free session. Otherwise, the return data will include a URL that should be opened in a web view for payment processing."
+			},
+			"response": []
+		},
+		{
+			"name": "list",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "M6nBvCxAiL9d8eFgHjKmPqRs",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://pravasitax.com/api/events/list",
+					"protocol": "https",
+					"host": [
+						"pravasitax",
+						"com"
+					],
+					"path": [
+						"api",
+						"events",
+						"list"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

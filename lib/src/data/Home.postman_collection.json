@@ -1,0 +1,42 @@
+{
+	"info": {
+		"_postman_id": "268c6b9a-21ac-486b-a925-d40f55b62b31",
+		"name": "Home",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "33547118",
+		"_collection_link": "https://lively-shuttle-632117.postman.co/workspace/PravasiTax~50b692d6-3177-4936-82cb-c6a20e12fe7a/collection/5679577-268c6b9a-21ac-486b-a925-d40f55b62b31?action=share&source=collection_link&creator=33547118"
+	},
+	"item": [
+		{
+			"name": "getHomePageData",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "M6nBvCxAiL9d8eFgHjKmPqRs",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "https://pravasitax.com/api/home/get-home-page-data",
+					"protocol": "https",
+					"host": [
+						"pravasitax",
+						"com"
+					],
+					"path": [
+						"api",
+						"home",
+						"get-home-page-data"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
