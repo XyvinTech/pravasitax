@@ -684,21 +684,21 @@ class _ForumInsideState extends ConsumerState<ForumInside> {
                 SizedBox(height: 16),
                 Row(
                   children: [
-                    _buildActionButton(
-                      onTap: _toggleLike,
-                      icon: isLiked ? Icons.favorite : Icons.favorite_border,
-                      iconColor: isLiked ? Colors.red : Colors.grey[600]!,
-                      text: '$likeCount',
-                      backgroundColor: primaryLightColor,
-                    ),
-                    SizedBox(width: 12),
-                    _buildActionButton(
-                      onTap: () {},
-                      icon: Icons.comment_outlined,
-                      iconColor: Colors.grey[600]!,
-                      text: '${widget.thread.postCount}',
-                      backgroundColor: primaryLightColor,
-                    ),
+                    // _buildActionButton(
+                    //   onTap: _toggleLike,
+                    //   icon: isLiked ? Icons.favorite : Icons.favorite_border,
+                    //   iconColor: isLiked ? Colors.red : Colors.grey[600]!,
+                    //   text: '$likeCount',
+                    //   backgroundColor: primaryLightColor,
+                    // ),
+                    // SizedBox(width: 12),
+                    // _buildActionButton(
+                    //   onTap: () {},
+                    //   icon: Icons.comment_outlined,
+                    //   iconColor: Colors.grey[600]!,
+                    //   text: '${widget.thread.postCount}',
+                    //   backgroundColor: primaryLightColor,
+                    // ),
                     Spacer(),
                     TextButton.icon(
                       onPressed: () => _showReplyModal(context, null),
