@@ -22,7 +22,7 @@ class MainPageConsultantPage extends ConsumerStatefulWidget {
 class _MainPageConsultantState extends ConsumerState<MainPageConsultantPage> {
   int _selectedIndex = 0;
   String? userToken;
-    late final webSocketClient;
+  late final webSocketClient;
   List<Widget> _widgetOptions = [
     HomePage(), // Home Page
     FeedPage(), // Feed Page
@@ -40,7 +40,7 @@ class _MainPageConsultantState extends ConsumerState<MainPageConsultantPage> {
   Future<void> _loadUserToken() async {
     final token = await SecureStorageService.getAuthToken();
     final userId = await SecureStorageService.getUserId();
-       webSocketClient = ref.read(socketIoClientProvider);
+    webSocketClient = ref.read(socketIoClientProvider);
     webSocketClient.connect(userId, ref);
     setState(() {
       userToken = token;
@@ -84,21 +84,37 @@ class _MainPageConsultantState extends ConsumerState<MainPageConsultantPage> {
           ],
         ),
         actions: [
-          IconButton(
-            icon:
-                Icon(Icons.notifications_active_outlined), // Notification icon
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => NotificationPage()),
-              );
-            },
-          ),
+          // IconButton(
+          //   icon:
+          //       Icon(Icons.notifications_active_outlined), // Notification icon
+          //   onPressed: () {
+          //     Navigator.push(
+          //       context,
+          //       MaterialPageRoute(builder: (context) => NotificationPage()),
+          //     );
+          //   },
+          // ),
           GestureDetector(
             onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => ProfilePage()),
+              showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return Dialog(
+                    insetPadding:
+                        EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(25),
+                    ),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(25),
+                      child: Container(
+                        width: double.infinity,
+                        height: MediaQuery.of(context).size.height * 0.8,
+                        child: ProfilePage(),
+                      ),
+                    ),
+                  );
+                },
               );
             },
             child: Padding(

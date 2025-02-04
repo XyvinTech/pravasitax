@@ -493,16 +493,16 @@ class _HomePageState extends ConsumerState<HomePage> {
           ),
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => ChatPage()),
-          );
-        },
-        backgroundColor: const Color(0xFF040F4F),
-        child: const Icon(Icons.chat, color: Color(0xFFF9B406)),
-      ),
+      // floatingActionButton: FloatingActionButton(
+      //   onPressed: () {
+      //     Navigator.push(
+      //       context,
+      //       MaterialPageRoute(builder: (context) => ChatPage()),
+      //     );
+      //   },
+      //   backgroundColor: const Color(0xFF040F4F),
+      //   child: const Icon(Icons.chat, color: Color(0xFFF9B406)),
+      // ),
     );
   }
 

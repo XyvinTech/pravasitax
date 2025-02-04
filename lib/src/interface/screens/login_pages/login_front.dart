@@ -42,8 +42,8 @@ class _LoginFrontPageState extends ConsumerState<LoginFrontPage> {
             },
             itemBuilder: (context, index) {
               return _buildPageItem(index == 0
-                  ? 'assets/images/login_image1.jpg'
-                  : 'assets/images/login_image2.jpg');
+                  ? 'assets/images/login_image_2.png'
+                  : 'assets/images/login_image_1.png');
             },
           ),
           Positioned(
@@ -385,7 +385,7 @@ class _LoginFrontPageState extends ConsumerState<LoginFrontPage> {
           final api = ref.read(pushNotificationsAPIProvider);
           final fcm = await getFcmToken();
           api.registerFCMToken(authState.userId ?? '', fcm);
-      await    initializeNoitifications();
+          await initializeNoitifications();
           Navigator.of(context).pop(); // Pop OTP dialog
 
           // Navigate based on user type

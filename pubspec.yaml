@@ -2,7 +2,7 @@ name: pravasitax_flutter
 description: "A new Flutter project."
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 
-version: 0.0.1+5
+version: 0.0.4+8
 
 environment:
   sdk: '>=3.4.3 <4.0.0'
@@ -13,6 +13,7 @@ flutter:
   assets:
     - assets/
     - assets/icons/
+    - assets/images/
     - assets/pravasi_logo.png
     - assets/icons/home_active.svg
     - assets/icons/home_inactive.svg

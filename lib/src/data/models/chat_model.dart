@@ -18,6 +18,30 @@ class Staff {
   }
 }
 
+class LastMessage {
+  final String? message;
+  final String? createdAt;
+  final String? sender;
+
+  LastMessage({this.message, this.createdAt, this.sender});
+
+  factory LastMessage.fromJson(Map<String, dynamic> json) {
+    return LastMessage(
+      message: json['message'] as String?,
+      createdAt: json['created_at'] as String?,
+      sender: json['sender'] as String?,
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'message': message,
+      'created_at': createdAt,
+      'sender': sender,
+    };
+  }
+}
+
 class Conversation {
   final String id;
   final String title;
@@ -29,7 +53,7 @@ class Conversation {
   final String statusText;
   final int unreadMessages;
   final int totalMessages;
-  final String lastMessage;
+  final LastMessage? lastMessage;
 
   Conversation({
     required this.id,
@@ -60,7 +84,9 @@ class Conversation {
       statusText: json['status_text'] ?? '',
       unreadMessages: json['unread_messages'] ?? 0,
       totalMessages: json['total_messages'] ?? 0,
-      lastMessage: json['last_message'] ?? '',
+      lastMessage: json['last_message'] != null
+          ? LastMessage.fromJson(json['last_message'] as Map<String, dynamic>)
+          : null,
     );
   }
 }
@@ -112,8 +138,7 @@ class MessageModel {
       conversationId: json['conversation_id'] ?? '',
       senderId: json['sender'] ?? '',
       content: json['message'] ?? json['content'] ?? '',
-      type: json['type'] ?? 
-     json['sender_type'] ?? '',
+      type: json['type'] ?? json['sender_type'] ?? '',
       createdAt: parseCustomDate(
           json['created_at'] ?? DateTime.now().toIso8601String()),
       isDelivered: (json['delivered'] as List?)?.isNotEmpty ?? false,

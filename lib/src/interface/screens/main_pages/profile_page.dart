@@ -25,321 +25,346 @@ class ProfilePage extends ConsumerWidget {
         )
         .whenData((data) => data as Customer);
 
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        title: const Text(
-          'Profile',
-          style: TextStyle(color: Colors.black),
-        ),
-        elevation: 0,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.black),
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
-        ),
-      ),
-      body: customerDetails.when(
-        data: (customer) => SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Profile Header Section
-              Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Row(
+    return Container(
+      color: Colors.white,
+      child: Column(
+        children: [
+          // Header with close button
+          Container(
+            padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  'Profile',
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                IconButton(
+                  icon: Icon(Icons.close),
+                  onPressed: () => Navigator.of(context).pop(),
+                ),
+              ],
+            ),
+          ),
+          Divider(),
+          // Profile content
+          Expanded(
+            child: customerDetails.when(
+              data: (customer) => SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(50),
-                      child: Container(
-                        width: 70,
-                        height: 70,
-                        color: Colors.grey,
-                        child: const Icon(Icons.person, color: Colors.white),
-                      ),
-                    ),
-                    const SizedBox(width: 16),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          customer.name,
-                          style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
+                    // Profile Header Section
+                    Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Row(
+                        children: [
+                          ClipRRect(
+                            borderRadius: BorderRadius.circular(50),
+                            child: Container(
+                              width: 70,
+                              height: 70,
+                              color: Colors.grey,
+                              child:
+                                  const Icon(Icons.person, color: Colors.white),
+                            ),
                           ),
-                        ),
-                        SizedBox(height: 4),
-                        Text(
-                          customer?.mobile ?? customer?.email ?? 'No Contact',
-                          style: TextStyle(color: Colors.grey),
-                        ),
-                        if (customer?.residingCountry != null) ...[
-                          SizedBox(height: 4),
-                          Text(
-                            customer!.residingCountry!,
-                            style: TextStyle(color: Colors.grey),
+                          const SizedBox(width: 16),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                customer.name,
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              SizedBox(height: 4),
+                              Text(
+                                customer?.mobile ??
+                                    customer?.email ??
+                                    'No Contact',
+                                style: TextStyle(color: Colors.grey),
+                              ),
+                              if (customer?.residingCountry != null) ...[
+                                SizedBox(height: 4),
+                                Text(
+                                  customer!.residingCountry!,
+                                  style: TextStyle(color: Colors.grey),
+                                ),
+                              ],
+                            ],
+                          ),
+                          const Spacer(),
+                          TextButton(
+                            onPressed: () {
+                              // Display the modal bottom sheet directly on 'Edit' button press
+                              showModalBottomSheet(
+                                context: context,
+                                isScrollControlled: true,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.vertical(
+                                      top: Radius.circular(16)),
+                                ),
+                                builder: (BuildContext context) {
+                                  return Padding(
+                                    padding: EdgeInsets.only(
+                                      left: 16,
+                                      right: 16,
+                                      top: 16,
+                                      bottom: MediaQuery.of(context)
+                                          .viewInsets
+                                          .bottom,
+                                    ),
+                                    child: Wrap(
+                                      children: [
+                                        Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            // Close Icon at the top-right corner
+                                            Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.end,
+                                              children: [
+                                                IconButton(
+                                                  icon: const Icon(Icons.close,
+                                                      color: Colors.black),
+                                                  onPressed: () {
+                                                    Navigator.of(context)
+                                                        .pop(); // Close the bottom sheet
+                                                  },
+                                                ),
+                                              ],
+                                            ),
+                                            Center(
+                                              child: CircleAvatar(
+                                                radius: 70,
+                                                backgroundImage: NetworkImage(
+                                                  'https://example.com/profile_picture.jpg',
+                                                ),
+                                              ),
+                                            ),
+                                            const SizedBox(height: 16),
+                                            const TextField(
+                                              decoration: InputDecoration(
+                                                labelText: "Name",
+                                                border: OutlineInputBorder(),
+                                              ),
+                                            ),
+                                            const SizedBox(height: 16),
+                                            const TextField(
+                                              decoration: InputDecoration(
+                                                labelText: "Phone Number",
+                                                border: OutlineInputBorder(),
+                                              ),
+                                            ),
+                                            const SizedBox(height: 16),
+                                            const TextField(
+                                              decoration: InputDecoration(
+                                                labelText: "Email ID",
+                                                border: OutlineInputBorder(),
+                                              ),
+                                            ),
+                                            const SizedBox(height: 16),
+                                            const TextField(
+                                              decoration: InputDecoration(
+                                                labelText: "DOB",
+                                                border: OutlineInputBorder(),
+                                              ),
+                                            ),
+                                            const SizedBox(height: 16),
+                                            Center(
+                                              child: ElevatedButton(
+                                                onPressed: () {},
+                                                child: const Text(
+                                                  "Proceed",
+                                                  style: TextStyle(
+                                                      color: Colors.black),
+                                                ),
+                                                style: ElevatedButton.styleFrom(
+                                                  backgroundColor:
+                                                      const Color(0xFFF9B406),
+                                                  padding: const EdgeInsets
+                                                      .symmetric(
+                                                      horizontal: 185,
+                                                      vertical: 18),
+                                                  shape: RoundedRectangleBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            8),
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                  );
+                                },
+                              );
+                            },
+                            child: const Text(
+                              'Edit',
+                              style: TextStyle(color: Colors.red),
+                            ),
                           ),
                         ],
-                      ],
-                    ),
-                    const Spacer(),
-                    TextButton(
-                      onPressed: () {
-                        // Display the modal bottom sheet directly on 'Edit' button press
-                        showModalBottomSheet(
-                          context: context,
-                          isScrollControlled: true,
-                          shape: RoundedRectangleBorder(
-                            borderRadius:
-                                BorderRadius.vertical(top: Radius.circular(16)),
-                          ),
-                          builder: (BuildContext context) {
-                            return Padding(
-                              padding: EdgeInsets.only(
-                                left: 16,
-                                right: 16,
-                                top: 16,
-                                bottom:
-                                    MediaQuery.of(context).viewInsets.bottom,
-                              ),
-                              child: Wrap(
-                                children: [
-                                  Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      // Close Icon at the top-right corner
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.end,
-                                        children: [
-                                          IconButton(
-                                            icon: const Icon(Icons.close,
-                                                color: Colors.black),
-                                            onPressed: () {
-                                              Navigator.of(context)
-                                                  .pop(); // Close the bottom sheet
-                                            },
-                                          ),
-                                        ],
-                                      ),
-                                      Center(
-                                        child: CircleAvatar(
-                                          radius: 70,
-                                          backgroundImage: NetworkImage(
-                                            'https://example.com/profile_picture.jpg',
-                                          ),
-                                        ),
-                                      ),
-                                      const SizedBox(height: 16),
-                                      const TextField(
-                                        decoration: InputDecoration(
-                                          labelText: "Name",
-                                          border: OutlineInputBorder(),
-                                        ),
-                                      ),
-                                      const SizedBox(height: 16),
-                                      const TextField(
-                                        decoration: InputDecoration(
-                                          labelText: "Phone Number",
-                                          border: OutlineInputBorder(),
-                                        ),
-                                      ),
-                                      const SizedBox(height: 16),
-                                      const TextField(
-                                        decoration: InputDecoration(
-                                          labelText: "Email ID",
-                                          border: OutlineInputBorder(),
-                                        ),
-                                      ),
-                                      const SizedBox(height: 16),
-                                      const TextField(
-                                        decoration: InputDecoration(
-                                          labelText: "DOB",
-                                          border: OutlineInputBorder(),
-                                        ),
-                                      ),
-                                      const SizedBox(height: 16),
-                                      Center(
-                                        child: ElevatedButton(
-                                          onPressed: () {},
-                                          child: const Text(
-                                            "Proceed",
-                                            style:
-                                                TextStyle(color: Colors.black),
-                                          ),
-                                          style: ElevatedButton.styleFrom(
-                                            backgroundColor:
-                                                const Color(0xFFF9B406),
-                                            padding: const EdgeInsets.symmetric(
-                                                horizontal: 185, vertical: 18),
-                                            shape: RoundedRectangleBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(8),
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                            );
-                          },
-                        );
-                      },
-                      child: const Text(
-                        'Edit',
-                        style: TextStyle(color: Colors.red),
                       ),
                     ),
+                    // SizedBox(height: MediaQuery.of(context).size.height * 0.2),
+                    _buildSectionHeader('ACCOUNT'),
+
+                    // _buildListTile(
+                    //   context,
+                    //   Icons.help_outline,
+                    //   'Help Center',
+                    //   onTap: () {
+                    //     Navigator.push(
+                    //       context,
+                    //       MaterialPageRoute(builder: (context) => HelpCenterPage()),
+                    //     );
+                    //   },
+                    // ),
+                    // Container(color: Color(0xFFD9D9D9), height: 1),
+                    // _buildListTile(
+                    //   context,
+                    //   Icons.rule,
+                    //   'My Filings',
+                    //   onTap: () {
+                    //     Navigator.push(
+                    //       context,
+                    //       MaterialPageRoute(builder: (context) => MyFilingsPage()),
+                    //     );
+                    //   },
+                    // ),
+                    // Container(color: Color(0xFFD9D9D9), height: 1),
+                    // _buildListTile(
+                    //   context,
+                    //   Icons.rule,
+                    //   'About Us',
+                    //   onTap: () {
+                    //     Navigator.push(
+                    //       context,
+                    //       MaterialPageRoute(builder: (context) => AboutPage()),
+                    //     );
+                    //   },
+                    // ),
+                    // Container(color: Color(0xFFD9D9D9), height: 1),
+                    // _buildListTile(
+                    //   context,
+                    //   Icons.file_present_outlined,
+                    //   'Documents',
+                    //   onTap: () {
+                    //     Navigator.push(
+                    //       context,
+                    //       MaterialPageRoute(builder: (context) => DocumentsPage()),
+                    //     );
+                    //   },
+                    // ),
+                    // Container(color: Color(0xFFD9D9D9), height: 1),
+                    // _buildListTile(
+                    //   context,
+                    //   Icons.subscriptions_outlined,
+                    //   'Subscriptions',
+                    //   onTap: () {
+                    //     Navigator.push(
+                    //       context,
+                    //       MaterialPageRoute(
+                    //           builder: (context) => SubscriptionsPage()),
+                    //     );
+                    //   },
+                    // ),
+                    // Container(color: Color(0xFFD9D9D9), height: 1),
+                    // _buildListTile(
+                    //   context,
+                    //   Icons.post_add_outlined,
+                    //   'My Posts',
+                    //   onTap: () {
+                    //     Navigator.push(
+                    //       context,
+                    //       MaterialPageRoute(builder: (context) => MyPostsPage()),
+                    //     );
+                    //   },
+                    // ),
+                    // Container(color: Color(0xFFD9D9D9), height: 1),
+                    // _buildListTile(
+                    //   context,
+                    //   Icons.rule,
+                    //   'Privacy Policy',
+                    //   onTap: () {
+                    //     Navigator.push(
+                    //       context,
+                    //       MaterialPageRoute(
+                    //           builder: (context) => PrivacyPolicyPage()),
+                    //     );
+                    //   },
+                    // ),
+                    // Container(color: Color(0xFFD9D9D9), height: 1),
+                    // _buildListTile(
+                    //   context,
+                    //   Icons.save_alt_outlined,
+                    //   'Saved News',
+                    //   onTap: () => Navigator.push(
+                    //     context,
+                    //     MaterialPageRoute(builder: (context) => SavedNewsPage()),
+                    //   ),
+                    // ),
+                    // Container(color: Color(0xFFD9D9D9), height: 1),
+                    // _buildListTile(
+                    //   context,
+                    //   Icons.rule,
+                    //   'Terms and Conditions',
+                    //   onTap: () {
+                    //     Navigator.push(
+                    //       context,
+                    //       MaterialPageRoute(
+                    //           builder: (context) => TermsAndConditionsPage()),
+                    //     );
+                    //   },
+                    // ),
+                    // Container(color: Color(0xFFD9D9D9), height: 1),
+                    // _buildListTile(
+                    //   context,
+                    //   Icons.rule_outlined,
+                    //   'Notification Settings',
+                    //   onTap: () {
+                    //     Navigator.push(
+                    //       context,
+                    //       MaterialPageRoute(
+                    //           builder: (context) => NotificationSettingsPage()),
+                    //     );
+                    //   },
+                    // ),
+
+                    Container(color: Color(0xFFF2F2F2), height: 15),
+                    _buildListTile(context, Icons.logout, 'Logout', onTap: () {
+                      _showLogoutDialog(context);
+                    }),
+                    Container(color: Color(0xFFF2F2F2), height: 15),
+                    _buildListTile(
+                        context, Icons.delete_forever, 'Delete Account',
+                        onTap: () {
+                      _showDeleteAccountDialog(context);
+                    }),
+                    Container(color: Color(0xFFF2F2F2), height: 100),
+
+                    const SizedBox(height: 20),
                   ],
                 ),
               ),
-              _buildSectionHeader('ACCOUNT'),
-
-              _buildListTile(
-                context,
-                Icons.help_outline,
-                'Help Center',
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => HelpCenterPage()),
-                  );
-                },
+              loading: () => Center(child: CircularProgressIndicator()),
+              error: (error, stack) => Center(
+                child: Text('Error loading profile: $error'),
               ),
-              Container(color: Color(0xFFD9D9D9), height: 1),
-              _buildListTile(
-                context,
-                Icons.rule,
-                'My Filings',
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => MyFilingsPage()),
-                  );
-                },
-              ),
-              Container(color: Color(0xFFD9D9D9), height: 1),
-              _buildListTile(
-                context,
-                Icons.rule,
-                'About Us',
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => AboutPage()),
-                  );
-                },
-              ),
-              Container(color: Color(0xFFD9D9D9), height: 1),
-              _buildListTile(
-                context,
-                Icons.file_present_outlined,
-                'Documents',
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => DocumentsPage()),
-                  );
-                },
-              ),
-              Container(color: Color(0xFFD9D9D9), height: 1),
-              _buildListTile(
-                context,
-                Icons.subscriptions_outlined,
-                'Subscriptions',
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => SubscriptionsPage()),
-                  );
-                },
-              ),
-              Container(color: Color(0xFFD9D9D9), height: 1),
-              _buildListTile(
-                context,
-                Icons.post_add_outlined,
-                'My Posts',
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => MyPostsPage()),
-                  );
-                },
-              ),
-              Container(color: Color(0xFFD9D9D9), height: 1),
-              _buildListTile(
-                context,
-                Icons.rule,
-                'Privacy Policy',
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => PrivacyPolicyPage()),
-                  );
-                },
-              ),
-              Container(color: Color(0xFFD9D9D9), height: 1),
-              _buildListTile(
-                context,
-                Icons.save_alt_outlined,
-                'Saved News',
-                onTap: () => Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => SavedNewsPage()),
-                ),
-              ),
-              Container(color: Color(0xFFD9D9D9), height: 1),
-              _buildListTile(
-                context,
-                Icons.rule,
-                'Terms and Conditions',
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => TermsAndConditionsPage()),
-                  );
-                },
-              ),
-              Container(color: Color(0xFFD9D9D9), height: 1),
-              _buildListTile(
-                context,
-                Icons.rule_outlined,
-                'Notification Settings',
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => NotificationSettingsPage()),
-                  );
-                },
-              ),
-              Container(color: Color(0xFFF2F2F2), height: 15),
-              _buildListTile(context, Icons.logout, 'Logout', onTap: () {
-                _showLogoutDialog(context);
-              }),
-              Container(color: Color(0xFFF2F2F2), height: 15),
-              _buildListTile(context, Icons.delete_forever, 'Delete Account',
-                  onTap: () {
-                _showDeleteAccountDialog(context);
-              }),
-              Container(color: Color(0xFFF2F2F2), height: 100),
-
-              const SizedBox(height: 20),
-            ],
+            ),
           ),
-        ),
-        loading: () => Center(child: CircularProgressIndicator()),
-        error: (error, stack) => Center(
-          child: Text('Error loading profile: $error'),
-        ),
+        ],
       ),
     );
   }
