@@ -1,17 +1,55 @@
 import 'dart:async';
-import 'dart:developer';
+import 'dart:developer' as developer;
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../api/chat_api.dart';
 import '../models/chat_model.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 
-final conversationsProvider =
-    FutureProvider.family<List<Conversation>, String>((ref, userToken) async {
-  final chatAPI = ref.watch(chatAPIProvider);
-  final conversations = await chatAPI.getConversations(userToken);
-  return conversations.map((json) => Conversation.fromJson(json)).toList();
-});
+final conversationsProvider = FutureProvider.family<List<Conversation>, String>(
+  (ref, userToken) async {
+    try {
+      final chatAPI = ref.watch(chatAPIProvider);
+      final conversations = await chatAPI.getConversations(userToken);
+
+      // Log successful conversations fetch
+      developer.log(
+        'Successfully fetched ${conversations.length} conversations',
+        name: 'ConversationsProvider',
+      );
+
+      final parsedConversations = conversations.map((json) {
+        try {
+          final conversation = Conversation.fromJson(json);
+          // Log each parsed conversation for debugging
+          developer.log(
+            'Parsed conversation: ${conversation.toDebugMap()}',
+            name: 'ConversationsProvider',
+          );
+          return conversation;
+        } catch (e, stack) {
+          developer.log(
+            'Error parsing individual conversation',
+            error: e,
+            stackTrace: stack,
+            name: 'ConversationsProvider',
+          );
+          rethrow;
+        }
+      }).toList();
+
+      return parsedConversations;
+    } catch (e, stack) {
+      developer.log(
+        'Error in conversations provider',
+        error: e,
+        stackTrace: stack,
+        name: 'ConversationsProvider',
+      );
+      throw Exception('Failed to load conversations: $e');
+    }
+  },
+);
 
 final conversationMessagesProvider = FutureProvider.family<List<MessageModel>,
     ({String userToken, String conversationId})>((ref, params) async {
@@ -165,24 +203,25 @@ class SocketIoClient {
           .build(),
     );
 
-    log('Connecting to: $uri');
+    developer.log('Connecting to: $uri');
 
     // Listen for connection events
     _socket.onConnect((_) {
-          _socket.emit('register', senderId);
-          
-      log('Connected to: $uri');
+      _socket.emit('register', senderId);
+
+      developer.log('Connected to: $uri');
     });
 
     // Listen to messages from the server
+
     _socket.on('newMessage', (data) {
-      log(data.toString());
+      developer.log(data.toString());
       print("im inside event listener");
       print('Received message: $data');
-      log(' Received message${data.toString()}');
+      developer.log(' Received message${data.toString()}');
+
       final messageModel = MessageModel.fromJson(data);
 
-   
       if (!_controller.isClosed) {
         _controller.add(messageModel);
       }

@@ -73,16 +73,46 @@ class ChatAPI {
 
       final response = await _client.get(uri, headers: _getHeaders(userToken));
 
-      developer.log('Get conversations response: ${response.body}',
+      developer.log('Get conversations raw response: ${response.body}',
           name: 'ChatAPI');
 
       if (response.statusCode == 200) {
         final responseData = json.decode(response.body);
-        if (responseData['response'] == '200') {
-          return List<Map<String, dynamic>>.from(responseData['data']);
+
+        // Validate response structure
+        if (responseData is! Map<String, dynamic>) {
+          throw Exception('Invalid response format: expected object');
         }
-        throw Exception(
-            responseData['message'] ?? 'Failed to get conversations');
+
+        if (responseData['response'] != '200') {
+          throw Exception(responseData['message'] ??
+              'Failed to get conversations: Invalid response code');
+        }
+
+        if (responseData['data'] == null || responseData['data'] is! List) {
+          throw Exception('Invalid data format: expected array');
+        }
+
+        final conversations =
+            List<Map<String, dynamic>>.from(responseData['data']);
+
+        // Log parsed conversations for debugging
+        developer.log('Parsed ${conversations.length} conversations',
+            name: 'ChatAPI');
+        for (var conversation in conversations) {
+          developer.log(
+              'Conversation ID: ${conversation['_id']}, Title: ${conversation['title']}',
+              name: 'ChatAPI');
+
+          // Validate staff array
+          if (conversation['staffs'] != null) {
+            developer.log(
+                'Staff count: ${(conversation['staffs'] as List).length}',
+                name: 'ChatAPI');
+          }
+        }
+
+        return conversations;
       }
       throw Exception('Failed to get conversations: ${response.statusCode}');
     } catch (e, stack) {

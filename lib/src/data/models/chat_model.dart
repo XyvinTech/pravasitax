@@ -1,6 +1,9 @@
+import 'dart:developer' as developer;
+
 class Staff {
   final String name;
   final String id;
+
   final String avatar;
 
   Staff({
@@ -70,24 +73,71 @@ class Conversation {
   });
 
   factory Conversation.fromJson(Map<String, dynamic> json) {
-    return Conversation(
-      id: json['_id'] ?? '',
-      title: json['title'] ?? '',
-      type: json['type'] ?? '',
-      staffs: (json['staffs'] as List?)
-              ?.map((staff) => Staff.fromJson(staff))
-              .toList() ??
-          [],
-      customer: json['customer'] ?? '',
-      createdAt: json['created_at'] ?? '',
-      status: json['status'] ?? 0,
-      statusText: json['status_text'] ?? '',
-      unreadMessages: json['unread_messages'] ?? 0,
-      totalMessages: json['total_messages'] ?? 0,
-      lastMessage: json['last_message'] != null
-          ? LastMessage.fromJson(json['last_message'] as Map<String, dynamic>)
-          : null,
-    );
+    try {
+      // Validate required fields
+      if (json['_id'] == null) throw Exception('Conversation ID is required');
+      if (json['title'] == null)
+        throw Exception('Conversation title is required');
+      if (json['type'] == null)
+        throw Exception('Conversation type is required');
+
+      // Parse staff array with validation
+      List<Staff> staffList = [];
+      if (json['staffs'] != null) {
+        if (json['staffs'] is! List) {
+          throw Exception('Invalid staffs format: expected array');
+        }
+        staffList = (json['staffs'] as List).map((staff) {
+          if (staff is! Map<String, dynamic>) {
+            throw Exception('Invalid staff format: expected object');
+          }
+          return Staff.fromJson(staff);
+        }).toList();
+      }
+
+      return Conversation(
+        id: json['_id'].toString(),
+        title: json['title'].toString(),
+        type: json['type'].toString(),
+        staffs: staffList,
+        customer: json['customer']?.toString() ?? '',
+        createdAt: json['created_at']?.toString() ?? '',
+        status: json['status'] is int ? json['status'] : 0,
+        statusText: json['status_text']?.toString() ?? '',
+        unreadMessages:
+            json['unread_messages'] is int ? json['unread_messages'] : 0,
+        totalMessages:
+            json['total_messages'] is int ? json['total_messages'] : 0,
+        lastMessage: json['last_message'] != null && json['last_message'] is Map
+            ? LastMessage.fromJson(json['last_message'])
+            : null,
+      );
+    } catch (e, stack) {
+      developer.log(
+        'Error parsing conversation',
+        error: e,
+        stackTrace: stack,
+        name: 'ConversationModel',
+      );
+      rethrow;
+    }
+  }
+
+  // Add debug method
+  Map<String, dynamic> toDebugMap() {
+    return {
+      'id': id,
+      'title': title,
+      'type': type,
+      'staffCount': staffs.length,
+      'customer': customer,
+      'createdAt': createdAt,
+      'status': status,
+      'statusText': statusText,
+      'unreadMessages': unreadMessages,
+      'totalMessages': totalMessages,
+      'hasLastMessage': lastMessage != null,
+    };
   }
 }
 
