@@ -1,0 +1,119 @@
+{
+	"info": {
+		"_postman_id": "717b34e6-fd22-4757-aba9-34a892b58be8",
+		"name": "User",
+		"description": "send",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "33547118",
+		"_collection_link": "https://lively-shuttle-632117.postman.co/workspace/PravasiTax~50b692d6-3177-4936-82cb-c6a20e12fe7a/collection/5679577-717b34e6-fd22-4757-aba9-34a892b58be8?action=share&source=collection_link&creator=33547118"
+	},
+	"item": [
+		{
+			"name": "update",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "M6nBvCxAiL9d8eFgHjKmPqRs",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "User-Token",
+						"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE3MzgwNjcxOTMsImV4cCI6MTc2OTE3MTE5MywiaWQiOiI2NzcyM2RhZjA3ODY3YTdlNjA3NTdhYjkiLCJuYW1lIjoiU2Fpam8iLCJlbWFpbCI6InNhaWpvZ2VAZ21haWwuY29tIiwicHJpdmlsZWdlcyI6W10sImRlcGFydG1lbnQiOiJ0ZXN0IiwiZGVzaWduYXRpb24iOiJ0ZXN0IDEifQ.BiTRNSJgYOpCkoq0WpaKcIu-UKV6fm98rJYBaFdkKvo",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "data",
+							"value": "{\"name\":\"saijo george\",\"mobile\":\"34523452333\",\"country_code\":\"+91\",\"residing_country\":\"China\"}",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "https://pravasitax.com/api/user/update",
+					"protocol": "https",
+					"host": [
+						"pravasitax",
+						"com"
+					],
+					"path": [
+						"api",
+						"user",
+						"update"
+					]
+				},
+				"description": "updatable fields with example values {\"name\":\"saijo\",\"mobile\":\"34523452345\",\"country_code\":\"+91\",\"residing_country\":\"China\"}\n\nsend token you recieved via verify otp via header 'User-Token'"
+			},
+			"response": []
+		},
+		{
+			"name": "get-details",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "User-Token",
+						"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE3MzgwNjcxOTMsImV4cCI6MTc2OTE3MTE5MywiaWQiOiI2NzcyM2RhZjA3ODY3YTdlNjA3NTdhYjkiLCJuYW1lIjoiU2Fpam8iLCJlbWFpbCI6InNhaWpvZ2VAZ21haWwuY29tIiwicHJpdmlsZWdlcyI6W10sImRlcGFydG1lbnQiOiJ0ZXN0IiwiZGVzaWduYXRpb24iOiJ0ZXN0IDEifQ.BiTRNSJgYOpCkoq0WpaKcIu-UKV6fm98rJYBaFdkKvo",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "https://pravasitax.com/api/user/get-details",
+					"protocol": "https",
+					"host": [
+						"pravasitax",
+						"com"
+					],
+					"path": [
+						"api",
+						"user",
+						"get-details"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "M6nBvCxAiL9d8eFgHjKmPqRs",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	]
+}

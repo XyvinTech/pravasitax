@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:pravasitax_flutter/src/data/providers/auth_provider.dart';
-import 'package:pravasitax_flutter/src/data/providers/customer_provider.dart';
+import 'package:pravasitax_flutter/src/data/providers/user_provider.dart';
 import 'package:pravasitax_flutter/src/interface/screens/menu_pages/documents.dart';
 import 'package:pravasitax_flutter/src/interface/screens/menu_pages/help_center.dart';
 import 'package:pravasitax_flutter/src/interface/screens/menu_pages/my_filings.dart';
@@ -13,17 +13,17 @@ import 'package:pravasitax_flutter/src/interface/screens/menu_pages/subscription
 import 'package:pravasitax_flutter/src/interface/screens/menu_pages/termsandconditions.dart';
 import 'package:pravasitax_flutter/src/interface/screens/menu_pages/notification_setting.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:pravasitax_flutter/src/data/models/customer_model.dart';
+import 'package:pravasitax_flutter/src/data/models/user_model.dart';
 
 class ProfilePage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final authState = ref.watch(authProvider);
-    final customerDetails = ref
+    final userDetails = ref
         .watch(
-          customerDetailsProvider(authState.token ?? ''),
+          userDetailsProvider(authState.token ?? ''),
         )
-        .whenData((data) => data as Customer);
+        .whenData((data) => data as User);
 
     return Container(
       color: Colors.white,
@@ -52,8 +52,8 @@ class ProfilePage extends ConsumerWidget {
           Divider(),
           // Profile content
           Expanded(
-            child: customerDetails.when(
-              data: (customer) => SingleChildScrollView(
+            child: userDetails.when(
+              data: (user) => SingleChildScrollView(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -77,23 +77,30 @@ class ProfilePage extends ConsumerWidget {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                customer.name,
+                                user.name,
                                 style: TextStyle(
                                   fontSize: 18,
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
-                              SizedBox(height: 4),
-                              Text(
-                                customer?.mobile ??
-                                    customer?.email ??
-                                    'No Contact',
-                                style: TextStyle(color: Colors.grey),
-                              ),
-                              if (customer?.residingCountry != null) ...[
+                              if (user.email != null) ...[
                                 SizedBox(height: 4),
                                 Text(
-                                  customer!.residingCountry!,
+                                  user.email!,
+                                  style: TextStyle(color: Colors.grey),
+                                ),
+                              ],
+                              if (user.mobile != null) ...[
+                                SizedBox(height: 4),
+                                Text(
+                                  user.mobile!,
+                                  style: TextStyle(color: Colors.grey),
+                                ),
+                              ],
+                              if (user.residingCountry != null) ...[
+                                SizedBox(height: 4),
+                                Text(
+                                  user.residingCountry!,
                                   style: TextStyle(color: Colors.grey),
                                 ),
                               ],
