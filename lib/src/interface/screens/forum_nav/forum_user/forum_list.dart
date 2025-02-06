@@ -61,10 +61,10 @@ class ForumList extends ConsumerWidget {
           onPressed: () => Navigator.pop(context),
         ),
         actions: [
-          IconButton(
-            icon: Icon(Icons.search, color: Colors.black87),
-            onPressed: () {},
-          ),
+          // IconButton(
+          //   icon: Icon(Icons.search, color: Colors.black87),
+          //   onPressed: () {},
+          // ),
         ],
       ),
       body: threadsAsync.when(

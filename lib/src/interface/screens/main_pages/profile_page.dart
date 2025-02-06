@@ -109,112 +109,8 @@ class ProfilePage extends ConsumerWidget {
                           const Spacer(),
                           TextButton(
                             onPressed: () {
-                              // Display the modal bottom sheet directly on 'Edit' button press
-                              showModalBottomSheet(
-                                context: context,
-                                isScrollControlled: true,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.vertical(
-                                      top: Radius.circular(16)),
-                                ),
-                                builder: (BuildContext context) {
-                                  return Padding(
-                                    padding: EdgeInsets.only(
-                                      left: 16,
-                                      right: 16,
-                                      top: 16,
-                                      bottom: MediaQuery.of(context)
-                                          .viewInsets
-                                          .bottom,
-                                    ),
-                                    child: Wrap(
-                                      children: [
-                                        Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            // Close Icon at the top-right corner
-                                            Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.end,
-                                              children: [
-                                                IconButton(
-                                                  icon: const Icon(Icons.close,
-                                                      color: Colors.black),
-                                                  onPressed: () {
-                                                    Navigator.of(context)
-                                                        .pop(); // Close the bottom sheet
-                                                  },
-                                                ),
-                                              ],
-                                            ),
-                                            Center(
-                                              child: CircleAvatar(
-                                                radius: 70,
-                                                backgroundImage: NetworkImage(
-                                                  'https://example.com/profile_picture.jpg',
-                                                ),
-                                              ),
-                                            ),
-                                            const SizedBox(height: 16),
-                                            const TextField(
-                                              decoration: InputDecoration(
-                                                labelText: "Name",
-                                                border: OutlineInputBorder(),
-                                              ),
-                                            ),
-                                            const SizedBox(height: 16),
-                                            const TextField(
-                                              decoration: InputDecoration(
-                                                labelText: "Phone Number",
-                                                border: OutlineInputBorder(),
-                                              ),
-                                            ),
-                                            const SizedBox(height: 16),
-                                            const TextField(
-                                              decoration: InputDecoration(
-                                                labelText: "Email ID",
-                                                border: OutlineInputBorder(),
-                                              ),
-                                            ),
-                                            const SizedBox(height: 16),
-                                            const TextField(
-                                              decoration: InputDecoration(
-                                                labelText: "DOB",
-                                                border: OutlineInputBorder(),
-                                              ),
-                                            ),
-                                            const SizedBox(height: 16),
-                                            Center(
-                                              child: ElevatedButton(
-                                                onPressed: () {},
-                                                child: const Text(
-                                                  "Proceed",
-                                                  style: TextStyle(
-                                                      color: Colors.black),
-                                                ),
-                                                style: ElevatedButton.styleFrom(
-                                                  backgroundColor:
-                                                      const Color(0xFFF9B406),
-                                                  padding: const EdgeInsets
-                                                      .symmetric(
-                                                      horizontal: 185,
-                                                      vertical: 18),
-                                                  shape: RoundedRectangleBorder(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            8),
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ],
-                                    ),
-                                  );
-                                },
-                              );
+                              _showEditProfileModal(
+                                  context, ref, user, authState.token ?? '');
                             },
                             child: const Text(
                               'Edit',
@@ -373,6 +269,205 @@ class ProfilePage extends ConsumerWidget {
           ),
         ],
       ),
+    );
+  }
+
+  void _showEditProfileModal(
+      BuildContext context, WidgetRef ref, User user, String token) {
+    final nameController = TextEditingController(text: user.name);
+    final mobileController = TextEditingController(text: user.mobile ?? '');
+    final countryCodeController =
+        TextEditingController(text: user.countryCode ?? '+91');
+    final residingCountryController =
+        TextEditingController(text: user.residingCountry ?? '');
+    final formKey = GlobalKey<FormState>();
+
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+      ),
+      builder: (BuildContext context) {
+        return Padding(
+          padding: EdgeInsets.only(
+            left: 16,
+            right: 16,
+            top: 16,
+            bottom: MediaQuery.of(context).viewInsets.bottom,
+          ),
+          child: Form(
+            key: formKey,
+            child: Wrap(
+              children: [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          'Edit Profile',
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        IconButton(
+                          icon: const Icon(Icons.close, color: Colors.black),
+                          onPressed: () => Navigator.of(context).pop(),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 16),
+                    TextFormField(
+                      controller: nameController,
+                      decoration: InputDecoration(
+                        labelText: "Name",
+                        border: OutlineInputBorder(),
+                      ),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter your name';
+                        }
+                        return null;
+                      },
+                    ),
+                    const SizedBox(height: 16),
+                    Row(
+                      children: [
+                        Expanded(
+                          flex: 2,
+                          child: TextFormField(
+                            controller: countryCodeController,
+                            decoration: InputDecoration(
+                              labelText: "Code",
+                              border: OutlineInputBorder(),
+                            ),
+                          ),
+                        ),
+                        SizedBox(width: 8),
+                        Expanded(
+                          flex: 5,
+                          child: TextFormField(
+                            controller: mobileController,
+                            decoration: InputDecoration(
+                              labelText: "Phone Number",
+                              border: OutlineInputBorder(),
+                            ),
+                            keyboardType: TextInputType.phone,
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 16),
+                    TextFormField(
+                      controller: residingCountryController,
+                      decoration: InputDecoration(
+                        labelText: "Residing Country",
+                        border: OutlineInputBorder(),
+                      ),
+                    ),
+                    if (user.email != null) ...[
+                      const SizedBox(height: 16),
+                      TextFormField(
+                        initialValue: user.email,
+                        enabled: false,
+                        decoration: InputDecoration(
+                          labelText: "Email ID",
+                          border: OutlineInputBorder(),
+                          filled: true,
+                          fillColor: Colors.grey[200],
+                        ),
+                      ),
+                    ],
+                    const SizedBox(height: 24),
+                    Center(
+                      child: Consumer(
+                        builder: (context, ref, child) {
+                          final updateState = ref.watch(userProvider);
+
+                          return updateState.when(
+                            data: (_) => ElevatedButton(
+                              onPressed: () async {
+                                if (formKey.currentState!.validate()) {
+                                  try {
+                                    await ref
+                                        .read(userProvider.notifier)
+                                        .updateUser(
+                                          userToken: token,
+                                          name: nameController.text,
+                                          mobile: mobileController.text,
+                                          countryCode:
+                                              countryCodeController.text,
+                                          residingCountry:
+                                              residingCountryController.text,
+                                        );
+
+                                    // Refresh user details
+                                    ref.refresh(userDetailsProvider(token));
+
+                                    if (context.mounted) {
+                                      Navigator.pop(context);
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(
+                                        SnackBar(
+                                            content: Text(
+                                                'Profile updated successfully')),
+                                      );
+                                    }
+                                  } catch (e) {
+                                    if (context.mounted) {
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(
+                                        SnackBar(
+                                            content: Text(
+                                                'Failed to update profile: $e')),
+                                      );
+                                    }
+                                  }
+                                }
+                              },
+                              child: const Text(
+                                "Save Changes",
+                                style: TextStyle(color: Colors.black),
+                              ),
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: const Color(0xFFF9B406),
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 48,
+                                  vertical: 16,
+                                ),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                              ),
+                            ),
+                            loading: () => CircularProgressIndicator(),
+                            error: (error, _) => Column(
+                              children: [
+                                Text('Error: $error',
+                                    style: TextStyle(color: Colors.red)),
+                                ElevatedButton(
+                                  onPressed: () {
+                                    ref.refresh(userProvider);
+                                  },
+                                  child: Text('Retry'),
+                                ),
+                              ],
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 
