@@ -432,27 +432,17 @@ class _LoginFrontPageState extends ConsumerState<LoginFrontPage> {
             controller: _otpControllers[index],
             focusNode: _otpFocusNodes[index],
             onChanged: (value) {
-              // Handle normal typing
-              if (value.length == 1 && index < 5) {
-                _otpFocusNodes[index + 1].requestFocus();
+              // Ensure only one character is entered
+              if (value.length > 1) {
+                _otpControllers[index].text =
+                    value[0]; // Keep only the first digit
+                _otpControllers[index].selection = TextSelection.fromPosition(
+                    TextPosition(offset: _otpControllers[index].text.length));
               }
-              // Handle paste
-              else if (value.length > 1) {
-                final pastedText = value.replaceAll(RegExp(r'[^0-9]'), '');
-                if (pastedText.isNotEmpty) {
-                  // Clear all fields first
-                  for (var controller in _otpControllers) {
-                    controller.clear();
-                  }
-                  // Distribute digits across fields
-                  for (int i = 0; i < pastedText.length && i < 6; i++) {
-                    _otpControllers[i].text = pastedText[i];
-                  }
-                  // Focus on the next empty field or the last field
-                  final nextIndex =
-                      pastedText.length < 6 ? pastedText.length : 5;
-                  _otpFocusNodes[nextIndex].requestFocus();
-                }
+
+              // Handle normal typing
+              if (value.isNotEmpty && index < 5) {
+                _otpFocusNodes[index + 1].requestFocus();
               }
             },
             onBackspace: () {
