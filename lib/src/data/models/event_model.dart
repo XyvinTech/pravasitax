@@ -68,7 +68,7 @@ class Event {
       time: json['time'] ?? '',
       type: json['type']?.toString().toLowerCase() ?? 'online',
       price: parsePrice(json['price']),
-      availableSeats: json['available_seats'] ?? 0,
+      availableSeats: json['available_seats'] ?? 1,
       speakers: (json['speakers'] as List?)
               ?.map((speaker) => Speaker.fromJson(speaker))
               .toList() ??

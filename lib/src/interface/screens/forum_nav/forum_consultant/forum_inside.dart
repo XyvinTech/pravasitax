@@ -681,6 +681,73 @@ class _ForumInsideState extends ConsumerState<ForumInside> {
                     height: 1.5,
                   ),
                 ),
+                if (widget.thread.image != null) ...[
+                  SizedBox(height: 16),
+                  GestureDetector(
+                    onTap: () {
+                      showDialog(
+                        context: context,
+                        builder: (context) => Dialog(
+                          backgroundColor: Colors.transparent,
+                          insetPadding: EdgeInsets.zero,
+                          child: Stack(
+                            fit: StackFit.loose,
+                            children: [
+                              InteractiveViewer(
+                                minScale: 0.5,
+                                maxScale: 4,
+                                child: Image.network(
+                                  widget.thread.image!,
+                                  fit: BoxFit.contain,
+                                  width: MediaQuery.of(context).size.width,
+                                  height: MediaQuery.of(context).size.height,
+                                ),
+                              ),
+                              Positioned(
+                                top: 40,
+                                right: 20,
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    color: Colors.black.withOpacity(0.5),
+                                    shape: BoxShape.circle,
+                                  ),
+                                  child: IconButton(
+                                    icon: Icon(Icons.close,
+                                        color: Colors.white, size: 30),
+                                    onPressed: () => Navigator.pop(context),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      );
+                    },
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(8),
+                      child: Container(
+                        height: 200, // Fixed height
+                        width: double.infinity,
+                        child: Image.network(
+                          widget.thread.image!,
+                          fit: BoxFit.cover,
+                          errorBuilder: (context, error, stackTrace) {
+                            return Container(
+                              height: 200,
+                              width: double.infinity,
+                              color: Colors.grey[200],
+                              child: Icon(
+                                Icons.error_outline,
+                                color: Colors.grey[400],
+                                size: 32,
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
                 SizedBox(height: 16),
                 Row(
                   children: [
@@ -739,21 +806,21 @@ class _ForumInsideState extends ConsumerState<ForumInside> {
                   ),
                 ),
                 SizedBox(width: 8),
-                Container(
-                  padding: EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-                  decoration: BoxDecoration(
-                    color: primaryLightColor,
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Text(
-                    '${widget.thread.postCount}',
-                    style: TextStyle(
-                      color: primaryColor,
-                      fontWeight: FontWeight.w600,
-                      fontSize: 12,
-                    ),
-                  ),
-                ),
+                // Container(
+                //   padding: EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                //   decoration: BoxDecoration(
+                //     color: primaryLightColor,
+                //     borderRadius: BorderRadius.circular(12),
+                //   ),
+                //   child: Text(
+                //     '${widget.thread.postCount}',
+                //     style: TextStyle(
+                //       color: primaryColor,
+                //       fontWeight: FontWeight.w600,
+                //       fontSize: 12,
+                //     ),
+                //   ),
+                // ),
               ],
             ),
           ),

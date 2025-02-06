@@ -51,11 +51,13 @@ class EventsAPI {
 
   Future<String?> bookEvent(String eventId, int seats) async {
     try {
-      final uri = Uri.parse('$baseUrl/evevnt-booking/book');
+      final uri = Uri.parse('$baseUrl/event-booking/book');
 
       final requestBody = {
-        'event': eventId,
-        'seats': seats,
+        'data': {
+          'event': eventId,
+          'seats': seats,
+        }
       };
 
       developer.log('Request URL: $uri', name: 'EventsAPI');

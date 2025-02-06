@@ -201,33 +201,33 @@ class ForumList extends ConsumerWidget {
                         SizedBox(height: 16),
                         Row(
                           children: [
-                            Container(
-                              padding: EdgeInsets.symmetric(
-                                horizontal: 12,
-                                vertical: 6,
-                              ),
-                              decoration: BoxDecoration(
-                                color: primaryLightColor,
-                                borderRadius: BorderRadius.circular(20),
-                              ),
-                              child: Row(
-                                children: [
-                                  Icon(
-                                    Icons.comment_outlined,
-                                    size: 16,
-                                    color: primaryColor,
-                                  ),
-                                  SizedBox(width: 4),
-                                  Text(
-                                    '${thread.postCount}',
-                                    style: TextStyle(
-                                      color: primaryColor,
-                                      fontWeight: FontWeight.w600,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
+                            // Container(
+                            //   padding: EdgeInsets.symmetric(
+                            //     horizontal: 12,
+                            //     vertical: 6,
+                            //   ),
+                            //   decoration: BoxDecoration(
+                            //     color: primaryLightColor,
+                            //     borderRadius: BorderRadius.circular(20),
+                            //   ),
+                            //   child: Row(
+                            //     children: [
+                            //       Icon(
+                            //         Icons.comment_outlined,
+                            //         size: 16,
+                            //         color: primaryColor,
+                            //       ),
+                            //       SizedBox(width: 4),
+                            //       Text(
+                            //         '${thread.postCount}',
+                            //         style: TextStyle(
+                            //           color: primaryColor,
+                            //           fontWeight: FontWeight.w600,
+                            //         ),
+                            //       ),
+                            //     ],
+                            //   ),
+                            // ),
                             Spacer(),
                             Text(
                               'View Thread →',
