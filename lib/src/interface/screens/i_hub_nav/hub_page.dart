@@ -372,7 +372,9 @@ class EventsSection extends ConsumerWidget {
                 decoration: BoxDecoration(
                   color: event.status == 'LIVE'
                       ? Color(0xFF0F7036)
-                      : Color(0xFF1266B9),
+                      : event.status == 'PAST'
+                          ? Colors.grey
+                          : Color(0xFF1266B9),
                   borderRadius: BorderRadius.circular(4),
                 ),
                 child: Text(
@@ -569,11 +571,15 @@ class EventDetailPage extends ConsumerWidget {
                     child: Container(
                       padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                       decoration: BoxDecoration(
-                        color: Colors.red,
+                        color: event.status == 'LIVE'
+                            ? Color(0xFF0F7036)
+                            : event.status == 'PAST'
+                                ? Colors.grey
+                                : Color(0xFF1266B9),
                         borderRadius: BorderRadius.circular(4),
                       ),
                       child: Text(
-                        'LIVE',
+                        event.status,
                         style: TextStyle(
                           color: Colors.white,
                           fontWeight: FontWeight.bold,
