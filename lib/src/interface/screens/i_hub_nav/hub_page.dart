@@ -372,7 +372,9 @@ class EventsSection extends ConsumerWidget {
                 decoration: BoxDecoration(
                   color: event.status == 'LIVE'
                       ? Color(0xFF0F7036)
-                      : Color(0xFF1266B9),
+                      : event.status == 'PAST'
+                          ? Colors.grey
+                          : Color(0xFF1266B9),
                   borderRadius: BorderRadius.circular(4),
                 ),
                 child: Text(
@@ -569,11 +571,15 @@ class EventDetailPage extends ConsumerWidget {
                     child: Container(
                       padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                       decoration: BoxDecoration(
-                        color: Colors.red,
+                        color: event.status == 'LIVE'
+                            ? Color(0xFF0F7036)
+                            : event.status == 'PAST'
+                                ? Colors.grey
+                                : Color(0xFF1266B9),
                         borderRadius: BorderRadius.circular(4),
                       ),
                       child: Text(
-                        'LIVE',
+                        event.status,
                         style: TextStyle(
                           color: Colors.white,
                           fontWeight: FontWeight.bold,
@@ -655,86 +661,128 @@ class EventDetailPage extends ConsumerWidget {
                 ),
                 onPressed: () async {
                   try {
-                    if (event.price == 0) {
-                      // Free event
-                      final bookingResult =
-                          await ref.read(eventBookingProvider((
-                        eventId: event.id,
-                        seats: 1,
-                      )).future);
+                    // Show seats selection dialog for all events
+                    final int? selectedSeats = await showDialog<int>(
+                      context: context,
+                      builder: (BuildContext context) {
+                        // Always start with 1 seat as default
+                        int seats = 1;
+                        return StatefulBuilder(
+                          builder: (context, setState) {
+                            void decrementSeats() {
+                              if (seats > 1) {
+                                setState(() {
+                                  seats--;
+                                });
+                              }
+                            }
 
-                      if (bookingResult != null &&
-                          bookingResult.startsWith('<!DOCTYPE html>')) {
-                        _showWebViewDialog(context, bookingResult);
-                      } else {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content:
-                                Text('Successfully registered for the event!'),
-                          ),
-                        );
-                      }
-                    } else {
-                      // Show dialog for paid events
-                      showDialog(
-                        context: context,
-                        builder: (context) => AlertDialog(
-                          title: Text('Book Event'),
-                          content: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Text(
-                                  'Price per seat: \$${event.price.toStringAsFixed(2)}'),
-                              if (event.type == 'offline')
-                                TextField(
-                                  decoration: InputDecoration(
-                                    labelText: 'Number of seats',
+                            void incrementSeats() {
+                              if (seats < event.availableSeats) {
+                                setState(() {
+                                  seats++;
+                                });
+                              }
+                            }
+
+                            // Format available seats text
+                            String availableSeatsText =
+                                event.availableSeats == 1
+                                    ? '1 seat available'
+                                    : '${event.availableSeats} seats available';
+
+                            return AlertDialog(
+                              title: Text('Select Seats'),
+                              content: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Text(availableSeatsText),
+                                  SizedBox(height: 16),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      IconButton(
+                                        icon: Icon(
+                                          Icons.remove_circle_outline,
+                                          color: seats > 1
+                                              ? Colors.blue
+                                              : Colors.grey,
+                                        ),
+                                        onPressed: decrementSeats,
+                                      ),
+                                      SizedBox(width: 16),
+                                      Text(
+                                        seats.toString(),
+                                        style: TextStyle(fontSize: 20),
+                                      ),
+                                      SizedBox(width: 16),
+                                      IconButton(
+                                        icon: Icon(
+                                          Icons.add_circle_outline,
+                                          color: seats < event.availableSeats
+                                              ? Colors.blue
+                                              : Colors.grey,
+                                        ),
+                                        onPressed: incrementSeats,
+                                      ),
+                                    ],
                                   ),
-                                  keyboardType: TextInputType.number,
-                                  onChanged: (value) {
-                                    // Handle seats input
-                                  },
+                                ],
+                              ),
+                              actions: [
+                                TextButton(
+                                  onPressed: () => Navigator.pop(context),
+                                  child: Text('Cancel'),
                                 ),
-                            ],
-                          ),
-                          actions: [
-                            TextButton(
-                              onPressed: () => Navigator.pop(context),
-                              child: Text('Cancel'),
-                            ),
-                            TextButton(
-                              onPressed: () async {
-                                Navigator.pop(context); // Close the dialog
-                                try {
-                                  final bookingResult =
-                                      await ref.read(eventBookingProvider((
-                                    eventId: event.id,
-                                    seats: 1,
-                                  )).future);
+                                TextButton(
+                                  onPressed: () =>
+                                      Navigator.pop(context, seats),
+                                  child: Text('Confirm'),
+                                ),
+                              ],
+                            );
+                          },
+                        );
+                      },
+                    );
 
-                                  if (bookingResult != null) {
-                                    if (bookingResult
-                                        .startsWith('<!DOCTYPE html>')) {
-                                      _showWebViewDialog(
-                                          context, bookingResult);
-                                    } else {
-                                      // Handle payment URL if needed
-                                    }
-                                  }
-                                } catch (e) {
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(
-                                      content: Text('Error booking event: $e'),
-                                      backgroundColor: Colors.red,
-                                    ),
-                                  );
-                                }
-                              },
-                              child: Text('Proceed to Payment'),
-                            ),
-                          ],
-                        ),
-                      );
+                    if (selectedSeats != null) {
+                      if (event.price == 0) {
+                        // Free event
+                        final bookingResult =
+                            await ref.read(eventBookingProvider((
+                          eventId: event.id,
+                          seats: selectedSeats,
+                        )).future);
+
+                        if (bookingResult != null) {
+                          if (bookingResult.startsWith('<!DOCTYPE html>')) {
+                            _showWebViewDialog(context, bookingResult);
+                          } else {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text(
+                                    'Successfully registered for the event!'),
+                              ),
+                            );
+                          }
+                        }
+                      } else {
+                        // Paid event - proceed to payment
+                        final bookingResult =
+                            await ref.read(eventBookingProvider((
+                          eventId: event.id,
+                          seats: selectedSeats,
+                        )).future);
+
+                        if (bookingResult != null) {
+                          if (bookingResult.startsWith('<!DOCTYPE html>')) {
+                            _showWebViewDialog(context, bookingResult);
+                          } else {
+                            // Handle payment URL if needed
+                          }
+                        }
+                      }
                     }
                   } catch (e) {
                     ScaffoldMessenger.of(context).showSnackBar(

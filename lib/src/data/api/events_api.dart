@@ -51,17 +51,21 @@ class EventsAPI {
 
   Future<String?> bookEvent(String eventId, int seats) async {
     try {
-      final uri = Uri.parse('$baseUrl/evevnt-booking/book');
+      final uri = Uri.parse('$baseUrl/event-booking/book');
 
-      final data = json.encode({
-        'event': eventId,
-        'seats': seats,
-      });
+      final requestBody = {
+        'data': {
+          'event': eventId,
+          'seats': seats,
+        }
+      };
 
-      developer.log('Booking event with data: $data', name: 'EventsAPI');
+      developer.log('Request URL: $uri', name: 'EventsAPI');
+      developer.log('Request body: $requestBody', name: 'EventsAPI');
 
       final headers = {
         'Authorization': 'Bearer $bearerToken',
+        'Content-Type': 'application/json',
         'User-Token':
             'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE3MzE5MDk5NTAsImV4cCI6MTc2MzAxMzk1MCwiaWQiOiI2NmZlYTZlNTM1ZDQxZTQxY2E3MjVmMzIiLCJuYW1lIjoiU2Fpam8gR2VvcmdlIiwiZW1haWwiOiJzYWlqb0BjYXBpdGFpcmUuY29tIn0.gI-7QRIjGJBVdOTTdy88__Hlutvb5X55YmL66i_cFEw',
       };
@@ -69,15 +73,12 @@ class EventsAPI {
       final response = await _client.post(
         uri,
         headers: headers,
-        body: {
-          'data': data,
-        },
+        body: json.encode(requestBody),
       );
 
-      developer.log('Booking response status: ${response.statusCode}',
+      developer.log('Response status: ${response.statusCode}',
           name: 'EventsAPI');
-      developer.log('Booking response body: ${response.body}',
-          name: 'EventsAPI');
+      developer.log('Response body: ${response.body}', name: 'EventsAPI');
 
       if (response.statusCode == 200) {
         if (response.body.trim().startsWith('<!DOCTYPE html>')) {

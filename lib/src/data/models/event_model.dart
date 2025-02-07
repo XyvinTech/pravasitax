@@ -4,13 +4,13 @@ class Event {
   final String description;
   final DateTime date;
   final String time;
-  final String type; 
+  final String type;
   final double price;
   final int availableSeats;
   final List<Speaker> speakers;
   final String? venue;
   final String? thumbnail;
-  final String status;
+  final String _status;
 
   Event({
     required this.id,
@@ -24,8 +24,23 @@ class Event {
     required this.speakers,
     this.venue,
     this.thumbnail,
-    required this.status,
-  });
+    required String status,
+  }) : _status = status;
+
+  // Computed property to determine actual status based on date
+  String get status {
+    final now = DateTime.now();
+    final eventDate = DateTime(date.year, date.month, date.day);
+    final today = DateTime(now.year, now.month, now.day);
+
+    if (eventDate.isBefore(today)) {
+      return 'PAST';
+    } else if (eventDate.isAtSameMomentAs(today)) {
+      return 'LIVE';
+    } else {
+      return 'UPCOMING';
+    }
+  }
 
   factory Event.fromJson(Map<String, dynamic> json) {
     // Parse price from various formats
@@ -53,7 +68,7 @@ class Event {
       time: json['time'] ?? '',
       type: json['type']?.toString().toLowerCase() ?? 'online',
       price: parsePrice(json['price']),
-      availableSeats: json['available_seats'] ?? 0,
+      availableSeats: json['available_seats'] ?? 1,
       speakers: (json['speakers'] as List?)
               ?.map((speaker) => Speaker.fromJson(speaker))
               .toList() ??
