@@ -7,7 +7,7 @@ import 'package:pravasitax_flutter/src/data/providers/auth_provider.dart';
 import 'package:pravasitax_flutter/src/data/services/get_fcm_token.dart';
 import 'package:pravasitax_flutter/src/data/services/initialize_notifications.dart';
 import 'dart:developer' as developer;
-
+import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:pravasitax_flutter/src/data/services/secure_storage_service.dart';
 
 class LoginFrontPage extends ConsumerStatefulWidget {
@@ -21,8 +21,8 @@ class _LoginFrontPageState extends ConsumerState<LoginFrontPage> {
   final PageController _pageController = PageController();
   int _currentIndex = 0;
   final TextEditingController _emailController = TextEditingController();
-  final List<TextEditingController> _otpControllers =
-      List.generate(6, (_) => TextEditingController());
+  final TextEditingController _otpController = TextEditingController();
+
   bool _isLoading = false;
   String? _errorMessage;
   final List<FocusNode> _otpFocusNodes = List.generate(6, (_) => FocusNode());
@@ -275,9 +275,42 @@ class _LoginFrontPageState extends ConsumerState<LoginFrontPage> {
                         color: Colors.grey[600],
                       ),
                     ),
-                    const SizedBox(height: 40),
-                    _buildOtpFields(),
-                    const SizedBox(height: 40),
+                    const SizedBox(height: 30),
+                    PinCodeTextField(
+                      appContext: context,
+                      length: 6, // Number of OTP digits
+                      obscureText: false,
+                      keyboardType:
+                          TextInputType.number, // Number-only keyboard
+                      animationType: AnimationType.fade,
+                      textStyle: const TextStyle(
+                        fontSize: 25,
+                        fontWeight: FontWeight.w300,
+                        letterSpacing: 5.0,
+                      ),
+                      pinTheme: PinTheme(
+                        shape: PinCodeFieldShape.box,
+                        borderRadius: BorderRadius.circular(5),
+                        fieldHeight: 55,
+                        fieldWidth: 50, selectedColor: AppPalette.kPrimaryColor,
+                        activeColor: const Color.fromARGB(255, 232, 226, 226),
+                        inactiveColor: const Color.fromARGB(255, 232, 226, 226),
+                        activeFillColor: Colors.white, // Box color when focused
+                        selectedFillColor:
+                            Colors.white, // Box color when selected
+                        inactiveFillColor:
+                            Colors.white, // Box fill color when not selected
+                      ),
+                      animationDuration: const Duration(milliseconds: 300),
+                      backgroundColor: Colors.transparent,
+                      enableActiveFill: true,
+                      controller: _otpController,
+
+                      onChanged: (value) {
+                        // Handle input change
+                      },
+                    ),
+                    const SizedBox(height: 10),
                     SizedBox(
                       width: double.infinity,
                       height: 50,
@@ -353,7 +386,7 @@ class _LoginFrontPageState extends ConsumerState<LoginFrontPage> {
   }
 
   Future<void> _verifyOTP(String email) async {
-    final otp = _otpControllers.map((controller) => controller.text).join();
+    final otp = _otpController.text;
     developer.log('Verifying OTP for email: $email',
         name: 'LoginFrontPage._verifyOTP');
 
@@ -420,50 +453,48 @@ class _LoginFrontPageState extends ConsumerState<LoginFrontPage> {
     }
   }
 
-  Widget _buildOtpFields() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children: List.generate(
-        6,
-        (index) => SizedBox(
-          width: 45,
-          height: 55,
-          child: OTPTextField(
-            controller: _otpControllers[index],
-            focusNode: _otpFocusNodes[index],
-            onChanged: (value) {
-              // Ensure only one character is entered
-              if (value.length > 1) {
-                _otpControllers[index].text =
-                    value[0]; // Keep only the first digit
-                _otpControllers[index].selection = TextSelection.fromPosition(
-                    TextPosition(offset: _otpControllers[index].text.length));
-              }
+  // Widget _buildOtpFields() {
+  //   return Row(
+  //     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+  //     children: List.generate(
+  //       6,
+  //       (index) => SizedBox(
+  //         width: 45,
+  //         height: 55,
+  //         child: OTPTextField(
+  //           controller: _otpControllers[index],
+  //           focusNode: _otpFocusNodes[index],
+  //           onChanged: (value) {
+  //             // Ensure only one character is entered
+  //             if (value.length > 1) {
+  //               _otpControllers[index].text =
+  //                   value[0]; // Keep only the first digit
+  //               _otpControllers[index].selection = TextSelection.fromPosition(
+  //                   TextPosition(offset: _otpControllers[index].text.length));
+  //             }
 
-              // Handle normal typing
-              if (value.isNotEmpty && index < 5) {
-                _otpFocusNodes[index + 1].requestFocus();
-              }
-            },
-            onBackspace: () {
-              if (index > 0) {
-                _otpControllers[index - 1].clear();
-                _otpFocusNodes[index - 1].requestFocus();
-              }
-            },
-          ),
-        ),
-      ),
-    );
-  }
+  //             // Handle normal typing
+  //             if (value.isNotEmpty && index < 5) {
+  //               _otpFocusNodes[index + 1].requestFocus();
+  //             }
+  //           },
+  //           onBackspace: () {
+  //             if (index > 0) {
+  //               _otpControllers[index - 1].clear();
+  //               _otpFocusNodes[index - 1].requestFocus();
+  //             }
+  //           },
+  //         ),
+  //       ),
+  //     ),
+  //   );
+  // }
 
   @override
   void dispose() {
     _pageController.dispose();
     _emailController.dispose();
-    for (var controller in _otpControllers) {
-      controller.dispose();
-    }
+    _otpController.dispose();
     for (var focusNode in _otpFocusNodes) {
       focusNode.dispose();
     }
