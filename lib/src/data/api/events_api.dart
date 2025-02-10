@@ -1,5 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart' as http;
+import 'package:pravasitax_flutter/src/data/services/secure_storage_service.dart';
 import 'dart:convert';
 import 'dart:developer' as developer;
 import '../models/event_model.dart';
@@ -12,18 +13,21 @@ class EventsAPI {
 
   EventsAPI(this._client);
 
-  Map<String, String> get _headers => {
+  Map<String, String> _getheaders(String userTOken) => {
         'Authorization': 'Bearer $bearerToken',
         'Content-Type': 'application/json',
+        'User-Token': userTOken
       };
 
   Future<List<Event>> getEvents() async {
+    final usertoken = await SecureStorageService.getAuthToken();
     try {
       final uri = Uri.parse('$baseUrl/events/list');
 
       developer.log('Fetching events with URL: $uri', name: 'EventsAPI');
 
-      final response = await _client.get(uri, headers: _headers);
+      final response =
+          await _client.get(uri, headers: _getheaders(usertoken ?? ''));
 
       developer.log('Response status code: ${response.statusCode}',
           name: 'EventsAPI');

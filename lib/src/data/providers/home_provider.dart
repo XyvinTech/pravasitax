@@ -1,4 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:pravasitax_flutter/src/data/services/secure_storage_service.dart';
 import '../api/home_api.dart';
 import '../models/home_page_model.dart';
 
@@ -33,9 +34,10 @@ class HomeNotifier extends StateNotifier<HomeState> {
 
   Future<void> fetchHomePageData() async {
     state = state.copyWith(isLoading: true, error: null);
+        final token = await SecureStorageService.getAuthToken();
 
     try {
-      final data = await _homeAPI.getHomePageData();
+      final data = await _homeAPI.getHomePageData(token??'');
       state = state.copyWith(isLoading: false, data: data);
     } catch (e) {
       state = state.copyWith(

@@ -11,7 +11,9 @@ import 'package:pravasitax_flutter/src/interface/screens/common/webview_screen.d
 import 'package:cached_network_image/cached_network_image.dart';
 
 class HomePage extends ConsumerStatefulWidget {
-  const HomePage({Key? key}) : super(key: key);
+
+
+  const HomePage({super.key,});
 
   @override
   ConsumerState<HomePage> createState() => _HomePageState();
@@ -475,6 +477,7 @@ class _HomePageState extends ConsumerState<HomePage> {
               ),
               const SizedBox(height: 24),
               // Event Section
+        
               if (data.event != null)
                 _buildEventCard(
                   context: context,
@@ -770,7 +773,9 @@ class _HomePageState extends ConsumerState<HomePage> {
 
           // Join Now button
           ElevatedButton(
-            onPressed: () {},
+            onPressed: () {
+              
+            },
             style: ElevatedButton.styleFrom(
               backgroundColor: Colors.amber[800],
               shape: RoundedRectangleBorder(

@@ -1,3 +1,5 @@
+
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -78,7 +80,7 @@ class ChatAPI {
 
       if (response.statusCode == 200) {
         final responseData = json.decode(response.body);
-
+  
         // Validate response structure
         if (responseData is! Map<String, dynamic>) {
           throw Exception('Invalid response format: expected object');

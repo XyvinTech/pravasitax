@@ -37,6 +37,7 @@ class _IndividualPageState extends ConsumerState<IndividualPage> {
   void initState() {
     super.initState();
     getMessageHistory();
+    print("GETTING PREVIOUS MESSAGES");
   }
 
   Future<void> _sendMessage() async {
@@ -124,240 +125,254 @@ class _IndividualPageState extends ConsumerState<IndividualPage> {
       }
     });
 
-    return Stack(
-      children: [
-        GestureDetector(
-          onTap: () {
-            FocusManager.instance.primaryFocus?.unfocus();
-          },
-          child: Scaffold(
-            backgroundColor: const Color(0xFFFCFCFC),
-            appBar: PreferredSize(
-                preferredSize: const Size.fromHeight(60),
-                child: AppBar(
-                  elevation: 1,
-                  shadowColor: Colors.white,
-                  backgroundColor: AppPalette.kPrimaryColor.withOpacity(.47),
-                  leadingWidth: 90,
-                  titleSpacing: 0,
-                  leading: Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      const SizedBox(width: 10),
-                      IconButton(
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                        icon: Icon(
-                          Icons.arrow_back_ios,
-                          size: 24,
-                        ),
-                      ),
-                      ClipOval(
-                        child: Container(
-                          width: 30,
-                          height: 30,
-                          color: const Color.fromARGB(255, 255, 255, 255),
-                          child: Image.network(
-                            widget.imageUrl,
-                            fit: BoxFit.cover,
-                            errorBuilder: (context, error, stackTrace) {
-                              return SvgPicture.asset(
-                                  'assets/icons/dummy_person_small.svg');
-                            },
+    return PopScope(
+      onPopInvokedWithResult: (didPop, result) {
+        if (didPop) {
+          ref.invalidate(conversationMessagesProvider);
+        }
+      },
+      child: Stack(
+        children: [
+          GestureDetector(
+            onTap: () {
+              FocusManager.instance.primaryFocus?.unfocus();
+            },
+            child: Scaffold(
+              backgroundColor: const Color(0xFFFCFCFC),
+              appBar: PreferredSize(
+                  preferredSize: const Size.fromHeight(60),
+                  child: AppBar(
+                    elevation: 1,
+                    shadowColor: Colors.white,
+                    backgroundColor: AppPalette.kPrimaryColor.withOpacity(.47),
+                    leadingWidth: 90,
+                    titleSpacing: 0,
+                    leading: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        const SizedBox(width: 10),
+                        IconButton(
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                          icon: Icon(
+                            Icons.arrow_back_ios,
+                            size: 24,
                           ),
                         ),
-                      ),
-                    ],
-                  ),
-                  title: GestureDetector(
-                    onTap: () {
-                      // Navigator.push(
-                      //   context,
-                      //   MaterialPageRoute(
-                      //     builder: (context) => ChatInfo(
-                      //       conversationId: widget.conversationId,
-                      //       title: widget.title,
-                      //       imageUrl: widget.imageUrl,
-                      //     ),
-                      //   ),
-                      // );
-                    },
-                    child: Row(
-                      children: [
-                        SizedBox(
-                          width: 10,
-                        ),
-                        Text(
-                          ' ${widget.title ?? ''}',
-                          style: const TextStyle(fontSize: 18),
-                        ),
-                      ],
-                    ),
-                  ),
-                )),
-            body: Stack(
-              children: [
-                Container(
-                  height: MediaQuery.of(context).size.height,
-                  width: MediaQuery.of(context).size.width,
-                  child: PopScope(
-                    child: Column(
-                      children: [
-                        Expanded(
-                          child: Padding(
-                            padding:
-                                EdgeInsets.only(left: 20, right: 20, top: 10),
-                            child: ListView.builder(
-                              reverse: true,
-                              controller: _scrollController,
-                              itemCount: messages.length,
-                              itemBuilder: (context, index) {
-                                final message = messages[messages.length -
-                                    1 -
-                                    index]; // Reverse the index to get the latest message first
-                                final isSent =
-                                    message.senderId == widget.userId;
-                                return Align(
-                                  alignment: isSent
-                                      ? Alignment.centerRight
-                                      : Alignment.centerLeft,
-                                  child: Container(
-                                    margin:
-                                        const EdgeInsets.symmetric(vertical: 4),
-                                    padding: const EdgeInsets.all(12),
-                                    decoration: BoxDecoration(
-                                      color: isSent
-                                          ? Colors.amber.shade100
-                                          : Colors.grey.shade200,
-                                      borderRadius: BorderRadius.only(
-                                        topLeft: Radius.circular(12),
-                                        topRight: Radius.circular(12),
-                                        bottomLeft: isSent
-                                            ? Radius.circular(12)
-                                            : Radius.circular(4),
-                                        bottomRight: isSent
-                                            ? Radius.circular(4)
-                                            : Radius.circular(12),
-                                      ),
-                                    ),
-                                    child: Column(
-                                      crossAxisAlignment: isSent
-                                          ? CrossAxisAlignment.end
-                                          : CrossAxisAlignment.start,
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        Text(
-                                          message.content,
-                                          style: const TextStyle(
-                                            fontSize: 16,
-                                            color: Colors.black87,
-                                          ),
-                                        ),
-                                        const SizedBox(height: 4),
-                                        Text(
-                                          _formatTime(message.createdAt),
-                                          style: TextStyle(
-                                            fontSize: 12,
-                                            color: Colors.grey[600],
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                );
+                        ClipOval(
+                          child: Container(
+                            width: 30,
+                            height: 30,
+                            color: const Color.fromARGB(255, 255, 255, 255),
+                            child: Image.network(
+                              widget.imageUrl,
+                              fit: BoxFit.cover,
+                              errorBuilder: (context, error, stackTrace) {
+                                return SvgPicture.asset(
+                                    'assets/icons/dummy_person_small.svg');
                               },
                             ),
                           ),
                         ),
-                        isBlocked
-                            ? Container(
-                                width: double.infinity,
-                                padding: const EdgeInsets.symmetric(
-                                  vertical: 20,
-                                ),
-                                decoration: const BoxDecoration(
-                                  color: Color(0xFF004797),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: Colors.black26,
-                                      blurRadius: 10,
-                                      offset: Offset(4, 4),
+                      ],
+                    ),
+                    title: GestureDetector(
+                      onTap: () {
+                        // Navigator.push(
+                        //   context,
+                        //   MaterialPageRoute(
+                        //     builder: (context) => ChatInfo(
+                        //       conversationId: widget.conversationId,
+                        //       title: widget.title,
+                        //       imageUrl: widget.imageUrl,
+                        //     ),
+                        //   ),
+                        // );
+                      },
+                      child: Row(
+                        children: [
+                          SizedBox(
+                            width: 10,
+                          ),
+                          Text(
+                            ' ${widget.title ?? ''}',
+                            style: const TextStyle(fontSize: 18),
+                          ),
+                        ],
+                      ),
+                    ),
+                  )),
+              body: Stack(
+                children: [
+                  Container(
+                    height: MediaQuery.of(context).size.height,
+                    width: MediaQuery.of(context).size.width,
+                    child: PopScope(
+                      child: Column(
+                        children: [
+                          Expanded(
+                            child: Padding(
+                              padding:
+                                  EdgeInsets.only(left: 20, right: 20, top: 10),
+                              child: ListView.builder(
+                                reverse: true,
+                                controller: _scrollController,
+                                itemCount: messages.length,
+                                itemBuilder: (context, index) {
+                                  final message = messages[messages.length -
+                                      1 -
+                                      index]; // Reverse the index to get the latest message first
+                                  final isSent =
+                                      message.senderId == widget.userId;
+                                  return Align(
+                                    alignment: isSent
+                                        ? Alignment.centerRight
+                                        : Alignment.centerLeft,
+                                    child: Container(
+                                      margin: const EdgeInsets.symmetric(
+                                          vertical: 4),
+                                      padding: const EdgeInsets.all(12),
+                                      decoration: BoxDecoration(
+                                        color: isSent
+                                            ? Colors.amber.shade100
+                                            : Colors.grey.shade200,
+                                        borderRadius: BorderRadius.only(
+                                          topLeft: Radius.circular(12),
+                                          topRight: Radius.circular(12),
+                                          bottomLeft: isSent
+                                              ? Radius.circular(12)
+                                              : Radius.circular(4),
+                                          bottomRight: isSent
+                                              ? Radius.circular(4)
+                                              : Radius.circular(12),
+                                        ),
+                                      ),
+                                      child: Column(
+                                        crossAxisAlignment: isSent
+                                            ? CrossAxisAlignment.end
+                                            : CrossAxisAlignment.start,
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          Text(
+                                            message.content,
+                                            style: const TextStyle(
+                                              fontSize: 16,
+                                              color: Colors.black87,
+                                            ),
+                                          ),
+                                          const SizedBox(height: 4),
+                                          Text(
+                                            _formatTime(message.createdAt),
+                                            style: TextStyle(
+                                              fontSize: 12,
+                                              color: Colors.grey[600],
+                                            ),
+                                          ),
+                                        ],
+                                      ),
                                     ),
-                                  ],
-                                ),
-                                child: const Center(
-                                  child: Text(
-                                    'This user is blocked',
-                                    style: TextStyle(
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.white,
-                                      letterSpacing: 1.5,
-                                      shadows: [
-                                        // Shadow(
-                                        //   color: Colors.black45,
-                                        //   blurRadius: 5,
-                                        //   offset: Offset(2, 2),
-                                        // ),
-                                      ],
+                                  );
+                                },
+                              ),
+                            ),
+                          ),
+                          isBlocked
+                              ? Container(
+                                  width: double.infinity,
+                                  padding: const EdgeInsets.symmetric(
+                                    vertical: 20,
+                                  ),
+                                  decoration: const BoxDecoration(
+                                    color: Color(0xFF004797),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.black26,
+                                        blurRadius: 10,
+                                        offset: Offset(4, 4),
+                                      ),
+                                    ],
+                                  ),
+                                  child: const Center(
+                                    child: Text(
+                                      'This user is blocked',
+                                      style: TextStyle(
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.white,
+                                        letterSpacing: 1.5,
+                                        shadows: [
+                                          // Shadow(
+                                          //   color: Colors.black45,
+                                          //   blurRadius: 5,
+                                          //   offset: Offset(2, 2),
+                                          // ),
+                                        ],
+                                      ),
                                     ),
                                   ),
-                                ),
-                              )
-                            : Align(
-                                alignment: Alignment.bottomCenter,
-                                child: Container(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 8.0, vertical: 5.0),
-                                  color: Colors.white,
-                                  child: Row(
-                                    children: [
-                                      Expanded(
-                                        child: Card(
-                                          elevation: 1,
-                                          color: Colors.white,
-                                          shape: RoundedRectangleBorder(
-                                            side: const BorderSide(
-                                              color: Color.fromARGB(
-                                                  255, 220, 215, 215),
-                                              width: 0.5,
-                                            ),
-                                            borderRadius:
-                                                BorderRadius.circular(15.0),
-                                          ),
-                                          child: Padding(
-                                            padding: const EdgeInsets.symmetric(
-                                                horizontal: 8.0, vertical: 5.0),
-                                            child: Container(
-                                              constraints: const BoxConstraints(
-                                                maxHeight:
-                                                    150, // Limit the height
+                                )
+                              : Align(
+                                  alignment: Alignment.bottomCenter,
+                                  child: Container(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 8.0, vertical: 5.0),
+                                    color: Colors.white,
+                                    child: Row(
+                                      children: [
+                                        Expanded(
+                                          child: Card(
+                                            elevation: 1,
+                                            color: Colors.white,
+                                            shape: RoundedRectangleBorder(
+                                              side: const BorderSide(
+                                                color: Color.fromARGB(
+                                                    255, 220, 215, 215),
+                                                width: 0.5,
                                               ),
-                                              child: Scrollbar(
-                                                thumbVisibility: true,
-                                                child: SingleChildScrollView(
-                                                  scrollDirection:
-                                                      Axis.vertical,
-                                                  reverse:
-                                                      true, // Start from bottom
-                                                  child: TextField(
-                                                    controller: _controller,
-                                                    focusNode: focusNode,
-                                                    keyboardType:
-                                                        TextInputType.multiline,
-                                                    maxLines:
-                                                        null, // Allows for unlimited lines
-                                                    minLines:
-                                                        1, // Starts with a single line
-                                                    decoration:
-                                                        const InputDecoration(
-                                                      border: InputBorder.none,
-                                                      hintText:
-                                                          "Type a message",
-                                                      contentPadding:
-                                                          EdgeInsets.symmetric(
-                                                              horizontal: 10),
+                                              borderRadius:
+                                                  BorderRadius.circular(15.0),
+                                            ),
+                                            child: Padding(
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                      horizontal: 8.0,
+                                                      vertical: 5.0),
+                                              child: Container(
+                                                constraints:
+                                                    const BoxConstraints(
+                                                  maxHeight:
+                                                      150, // Limit the height
+                                                ),
+                                                child: Scrollbar(
+                                                  thumbVisibility: true,
+                                                  child: SingleChildScrollView(
+                                                    scrollDirection:
+                                                        Axis.vertical,
+                                                    reverse:
+                                                        true, // Start from bottom
+                                                    child: TextField(
+                                                      controller: _controller,
+                                                      focusNode: focusNode,
+                                                      keyboardType:
+                                                          TextInputType
+                                                              .multiline,
+                                                      maxLines:
+                                                          null, // Allows for unlimited lines
+                                                      minLines:
+                                                          1, // Starts with a single line
+                                                      decoration:
+                                                          const InputDecoration(
+                                                        border:
+                                                            InputBorder.none,
+                                                        hintText:
+                                                            "Type a message",
+                                                        contentPadding:
+                                                            EdgeInsets
+                                                                .symmetric(
+                                                                    horizontal:
+                                                                        10),
+                                                      ),
                                                     ),
                                                   ),
                                                 ),
@@ -365,57 +380,57 @@ class _IndividualPageState extends ConsumerState<IndividualPage> {
                                             ),
                                           ),
                                         ),
-                                      ),
-                                      Padding(
-                                        padding: const EdgeInsets.only(
-                                          right: 2,
-                                          left: 2,
-                                        ),
-                                        child: Container(
-                                          decoration: BoxDecoration(
-                                              color: AppPalette.kPrimaryColor,
-                                              borderRadius:
-                                                  BorderRadius.circular(5)),
-                                          child: IconButton(
-                                            icon: const Icon(
-                                              Icons.send,
-                                              color: Colors.black,
+                                        Padding(
+                                          padding: const EdgeInsets.only(
+                                            right: 2,
+                                            left: 2,
+                                          ),
+                                          child: Container(
+                                            decoration: BoxDecoration(
+                                                color: AppPalette.kPrimaryColor,
+                                                borderRadius:
+                                                    BorderRadius.circular(5)),
+                                            child: IconButton(
+                                              icon: const Icon(
+                                                Icons.send,
+                                                color: Colors.black,
+                                              ),
+                                              onPressed: () {
+                                                _sendMessage();
+                                              },
                                             ),
-                                            onPressed: () {
-                                              _sendMessage();
-                                            },
                                           ),
                                         ),
-                                      ),
-                                    ],
+                                      ],
+                                    ),
                                   ),
-                                ),
-                              )
-                      ],
-                    ),
-                    onPopInvoked: (didPop) {
-                      if (didPop) {
-                        if (show) {
-                          setState(() {
-                            show = false;
-                          });
-                        } else {
-                          focusNode.unfocus();
-                          WidgetsBinding.instance.addPostFrameCallback((_) {
-                            if (Navigator.canPop(context)) {
-                              Navigator.pop(context);
-                            }
-                          });
+                                )
+                        ],
+                      ),
+                      onPopInvoked: (didPop) {
+                        if (didPop) {
+                          if (show) {
+                            setState(() {
+                              show = false;
+                            });
+                          } else {
+                            focusNode.unfocus();
+                            WidgetsBinding.instance.addPostFrameCallback((_) {
+                              if (Navigator.canPop(context)) {
+                                Navigator.pop(context);
+                              }
+                            });
+                          }
                         }
-                      }
-                    },
+                      },
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 

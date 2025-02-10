@@ -11,12 +11,11 @@ class HomeAPI {
   final http.Client _client;
 
   HomeAPI(this._client);
-
-  Map<String, String> get _headers => {
+  Map<String, String> _getHeaders(String userToken) => {
         'Authorization': 'Bearer $bearerToken',
+        'User-Token': userToken,
         'Content-Type': 'application/json',
       };
-
   DateTime? _parseDateTime(dynamic dateData) {
     try {
       if (dateData == null) return null;
@@ -35,13 +34,13 @@ class HomeAPI {
     }
   }
 
-  Future<HomePageData> getHomePageData() async {
+  Future<HomePageData> getHomePageData(String userToken) async {
     try {
       developer.log('Fetching home page data from API', name: 'HomeAPI');
 
       final response = await _client.post(
         Uri.parse('$baseUrl/get-home-page-data'),
-        headers: _headers,
+        headers:  _getHeaders(userToken),
       );
 
       developer.log('API Response Status Code: ${response.statusCode}',
