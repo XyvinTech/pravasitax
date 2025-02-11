@@ -5,6 +5,7 @@ import 'package:pravasitax_flutter/src/data/models/news_model.dart';
 import 'package:pravasitax_flutter/src/interface/widgets/video_web_view.dart';
 import 'dart:developer' as developer;
 import 'package:pravasitax_flutter/src/interface/widgets/loading_indicator.dart';
+
 class FeedPage extends ConsumerStatefulWidget {
   @override
   _FeedPageState createState() => _FeedPageState();
@@ -111,39 +112,82 @@ class _FeedPageState extends ConsumerState<FeedPage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   if (news.media.type == 'image')
-                    Image.network(
-                      news.media.url,
-                      height: 300,
-                      width: double.infinity,
-                      fit: BoxFit.cover,
-                      errorBuilder: (context, error, stackTrace) {
-                        return Container(
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 16, vertical: 8),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(16),
+                        child: Image.network(
+                          news.media.url,
                           height: 300,
-                          color: Colors.grey[300],
-                          child: Icon(Icons.image,
-                              size: 50, color: Colors.grey[400]),
-                        );
-                      },
+                          width: double.infinity,
+                          fit: BoxFit.cover,
+                          errorBuilder: (context, error, stackTrace) {
+                            return Container(
+                              height: 300,
+                              decoration: BoxDecoration(
+                                color: Colors.grey[300],
+                                borderRadius: BorderRadius.circular(16),
+                              ),
+                              child: Icon(Icons.image,
+                                  size: 50, color: Colors.grey[400]),
+                            );
+                          },
+                        ),
+                      ),
                     )
                   else if (news.media.type == 'video')
-                    Container(
-                      height: 300,
-                      child: isCurrentPage
-                          ? VideoWebView(
-                              videoUrl: news.media.url,
-                              autoPlay: true,
-                              looping: true,
-                            )
-                          : Container(
-                              color: Colors.black,
-                              child: Center(
-                                child: Icon(
-                                  Icons.play_circle_outline,
-                                  size: 64,
-                                  color: Colors.white54,
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 16, vertical: 8),
+                      child: Container(
+                        height: 300,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(16),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.1),
+                              blurRadius: 10,
+                              offset: Offset(0, 4),
+                            ),
+                          ],
+                        ),
+                        child: isCurrentPage
+                            ? VideoWebView(
+                                videoUrl: news.media.url,
+                                autoPlay: true,
+                                looping: true,
+                                borderRadius: 16,
+                              )
+                            : Container(
+                                decoration: BoxDecoration(
+                                  color: Colors.black,
+                                  borderRadius: BorderRadius.circular(16),
+                                ),
+                                child: Center(
+                                  child: Container(
+                                    width: 80,
+                                    height: 80,
+                                    decoration: BoxDecoration(
+                                      color: Colors.white.withOpacity(0.9),
+                                      shape: BoxShape.circle,
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: Colors.black.withOpacity(0.3),
+                                          blurRadius: 10,
+                                          spreadRadius: 2,
+                                        ),
+                                      ],
+                                    ),
+                                    child: Icon(
+                                      Icons.play_arrow_rounded,
+                                      size: 50,
+                                      color: Colors.black87,
+                                    ),
+                                  ),
                                 ),
                               ),
-                            ),
+                      ),
                     ),
                   Padding(
                     padding: const EdgeInsets.all(16),
