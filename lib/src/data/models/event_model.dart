@@ -11,6 +11,7 @@ class Event {
   final String? venue;
   final String? thumbnail;
   final String _status;
+  final bool isBooked;
 
   Event({
     required this.id,
@@ -25,6 +26,7 @@ class Event {
     this.venue,
     this.thumbnail,
     required String status,
+    required this.isBooked,
   }) : _status = status;
 
   // Computed property to determine actual status based on date
@@ -76,6 +78,7 @@ class Event {
       venue: json['venue'] ?? json['location'],
       thumbnail: json['thumbnail'] ?? json['banner'],
       status: json['status'] ?? 'UPCOMING',
+      isBooked: json['is_booked'] ?? false,
     );
   }
 }

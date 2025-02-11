@@ -15,7 +15,6 @@ import 'package:pravasitax_flutter/src/interface/widgets/loading_indicator.dart'
 import 'package:pravasitax_flutter/src/interface/screens/i_hub_nav/hub_page.dart';
 import 'package:pravasitax_flutter/src/data/models/event_model.dart';
 
-
 class HomePage extends ConsumerStatefulWidget {
   const HomePage({
     super.key,
@@ -556,9 +555,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                       child: SizedBox(
                         width: 24,
                         height: 24,
-                        child: LoadingIndicator(
-                       
-                        ),
+                        child: LoadingIndicator(),
                       ),
                     ),
                     errorWidget: (context, url, error) {
@@ -644,9 +641,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                   width: 36,
                   height: 36,
                   child: Center(
-                    child: LoadingIndicator(
-             
-                    ),
+                    child: LoadingIndicator(),
                   ),
                 ),
                 errorWidget: (context, url, error) => Icon(
@@ -694,6 +689,8 @@ class _HomePageState extends ConsumerState<HomePage> {
       venue: description, // Using description as venue
       thumbnail: imageUrl,
       status: isLive ? 'LIVE' : 'UPCOMING', // Set status based on isLive flag
+      isBooked:
+          false, // Set isBooked to false since we don't have booked data in homepage
     );
 
     return Container(
@@ -796,7 +793,6 @@ class _HomePageState extends ConsumerState<HomePage> {
 
           // Join Now button
           ElevatedButton(
-
             onPressed: () {
               Navigator.push(
                 context,
@@ -805,7 +801,6 @@ class _HomePageState extends ConsumerState<HomePage> {
                 ),
               );
             },
-
             style: ElevatedButton.styleFrom(
               backgroundColor: Colors.amber[800],
               shape: RoundedRectangleBorder(
