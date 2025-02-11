@@ -10,6 +10,12 @@ import 'dart:developer' as developer;
 import 'package:pravasitax_flutter/src/interface/screens/common/webview_screen.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
+import 'package:pravasitax_flutter/src/interface/widgets/loading_indicator.dart';
+
+import 'package:pravasitax_flutter/src/interface/screens/i_hub_nav/hub_page.dart';
+import 'package:pravasitax_flutter/src/data/models/event_model.dart';
+
+
 class HomePage extends ConsumerStatefulWidget {
   const HomePage({
     super.key,
@@ -790,9 +796,16 @@ class _HomePageState extends ConsumerState<HomePage> {
 
           // Join Now button
           ElevatedButton(
+
             onPressed: () {
-              
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => EventDetailPage(event: event),
+                ),
+              );
             },
+
             style: ElevatedButton.styleFrom(
               backgroundColor: Colors.amber[800],
               shape: RoundedRectangleBorder(
