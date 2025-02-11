@@ -612,223 +612,224 @@ class _ForumInsideState extends ConsumerState<ForumInside> {
           ),
         ],
       ),
-      body: Column(
-        children: [
-          // Main Post
-          Container(
-            margin: EdgeInsets.all(16),
-            padding: EdgeInsets.all(16),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(12),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withOpacity(0.05),
-                  blurRadius: 10,
-                  offset: Offset(0, 2),
-                ),
-              ],
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  children: [
-                    CircleAvatar(
-                      backgroundColor: primaryLightColor,
-                      radius: 20,
-                      child: Text(
-                        (widget.thread.authorName ?? widget.thread.userId)[0]
-                            .toUpperCase(),
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                          color: primaryColor,
+      body: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Main Post
+            Container(
+              margin: EdgeInsets.all(16),
+              padding: EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(16),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.08),
+                    blurRadius: 15,
+                    offset: Offset(0, 4),
+                  ),
+                ],
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Container(
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          border: Border.all(
+                            color: primaryColor.withOpacity(0.2),
+                            width: 2,
+                          ),
+                        ),
+                        child: CircleAvatar(
+                          backgroundColor: primaryLightColor,
+                          radius: 24,
+                          child: Text(
+                            (widget.thread.authorName ??
+                                    widget.thread.userId)[0]
+                                .toUpperCase(),
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              color: primaryColor,
+                            ),
+                          ),
                         ),
                       ),
+                      SizedBox(width: 12),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              widget.thread.authorName ?? widget.thread.userId,
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 16,
+                                color: Colors.black87,
+                              ),
+                            ),
+                            Text(
+                              _formatTime(widget.thread.createdAt),
+                              style: TextStyle(
+                                color: Colors.grey[600],
+                                fontSize: 12,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 16),
+                  Text(
+                    widget.thread.description,
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: Colors.black87,
+                      height: 1.6,
+                      letterSpacing: 0.2,
                     ),
-                    SizedBox(width: 12),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            widget.thread.authorName ?? widget.thread.userId,
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 16,
-                              color: Colors.black87,
+                  ),
+                  if (widget.thread.image != null) ...[
+                    SizedBox(height: 16),
+                    GestureDetector(
+                      onTap: () {
+                        showDialog(
+                          context: context,
+                          builder: (context) => Dialog(
+                            backgroundColor: Colors.transparent,
+                            insetPadding: EdgeInsets.zero,
+                            child: Stack(
+                              fit: StackFit.loose,
+                              children: [
+                                InteractiveViewer(
+                                  minScale: 0.5,
+                                  maxScale: 4,
+                                  child: Image.network(
+                                    widget.thread.image!,
+                                    fit: BoxFit.contain,
+                                    width: MediaQuery.of(context).size.width,
+                                    height: MediaQuery.of(context).size.height,
+                                  ),
+                                ),
+                                Positioned(
+                                  top: 40,
+                                  right: 20,
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      color: Colors.black.withOpacity(0.5),
+                                      shape: BoxShape.circle,
+                                    ),
+                                    child: IconButton(
+                                      icon: Icon(Icons.close,
+                                          color: Colors.white, size: 30),
+                                      onPressed: () => Navigator.pop(context),
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
-                          Text(
-                            _formatTime(widget.thread.createdAt),
-                            style: TextStyle(
-                              color: Colors.grey[600],
-                              fontSize: 12,
+                        );
+                      },
+                      child: Hero(
+                        tag: 'thread_image_${widget.thread.id}',
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(12),
+                          child: Container(
+                            height: 200,
+                            width: double.infinity,
+                            child: Image.network(
+                              widget.thread.image!,
+                              fit: BoxFit.cover,
+                              errorBuilder: (context, error, stackTrace) {
+                                return Container(
+                                  height: 200,
+                                  width: double.infinity,
+                                  color: Colors.grey[200],
+                                  child: Icon(
+                                    Icons.error_outline,
+                                    color: Colors.grey[400],
+                                    size: 32,
+                                  ),
+                                );
+                              },
                             ),
                           ),
-                        ],
+                        ),
                       ),
                     ),
                   ],
-                ),
-                SizedBox(height: 12),
-                Text(
-                  widget.thread.description,
-                  style: TextStyle(
-                    fontSize: 15,
-                    color: Colors.black87,
-                    height: 1.5,
-                  ),
-                ),
-                if (widget.thread.image != null) ...[
                   SizedBox(height: 16),
-                  GestureDetector(
-                    onTap: () {
-                      showDialog(
-                        context: context,
-                        builder: (context) => Dialog(
-                          backgroundColor: Colors.transparent,
-                          insetPadding: EdgeInsets.zero,
-                          child: Stack(
-                            fit: StackFit.loose,
-                            children: [
-                              InteractiveViewer(
-                                minScale: 0.5,
-                                maxScale: 4,
-                                child: Image.network(
-                                  widget.thread.image!,
-                                  fit: BoxFit.contain,
-                                  width: MediaQuery.of(context).size.width,
-                                  height: MediaQuery.of(context).size.height,
-                                ),
-                              ),
-                              Positioned(
-                                top: 40,
-                                right: 20,
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                    color: Colors.black.withOpacity(0.5),
-                                    shape: BoxShape.circle,
-                                  ),
-                                  child: IconButton(
-                                    icon: Icon(Icons.close,
-                                        color: Colors.white, size: 30),
-                                    onPressed: () => Navigator.pop(context),
-                                  ),
-                                ),
-                              ),
-                            ],
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      TextButton.icon(
+                        onPressed: () => _showReplyModal(context, null),
+                        icon: Icon(Icons.reply, size: 20, color: primaryColor),
+                        label: Text(
+                          'Reply',
+                          style: TextStyle(
+                            color: primaryColor,
+                            fontWeight: FontWeight.w600,
                           ),
                         ),
-                      );
-                    },
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(8),
-                      child: Container(
-                        height: 200, // Fixed height
-                        width: double.infinity,
-                        child: Image.network(
-                          widget.thread.image!,
-                          fit: BoxFit.cover,
-                          errorBuilder: (context, error, stackTrace) {
-                            return Container(
-                              height: 200,
-                              width: double.infinity,
-                              color: Colors.grey[200],
-                              child: Icon(
-                                Icons.error_outline,
-                                color: Colors.grey[400],
-                                size: 32,
-                              ),
-                            );
-                          },
+                        style: TextButton.styleFrom(
+                          backgroundColor: primaryLightColor,
+                          padding:
+                              EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20),
+                          ),
                         ),
                       ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+
+            // Replies Section Header
+            Container(
+              margin: EdgeInsets.symmetric(horizontal: 16),
+              child: Row(
+                children: [
+                  Container(
+                    padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                    decoration: BoxDecoration(
+                      color: primaryLightColor,
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Row(
+                      children: [
+                        Icon(
+                          Icons.forum_outlined,
+                          size: 16,
+                          color: primaryColor,
+                        ),
+                        SizedBox(width: 4),
+                        Text(
+                          'Replies',
+                          style: TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.bold,
+                            color: primaryColor,
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 ],
-                SizedBox(height: 16),
-                Row(
-                  children: [
-                    // _buildActionButton(
-                    //   onTap: _toggleLike,
-                    //   icon: isLiked ? Icons.favorite : Icons.favorite_border,
-                    //   iconColor: isLiked ? Colors.red : Colors.grey[600]!,
-                    //   text: '$likeCount',
-                    //   backgroundColor: primaryLightColor,
-                    // ),
-                    // SizedBox(width: 12),
-                    // _buildActionButton(
-                    //   onTap: () {},
-                    //   icon: Icons.comment_outlined,
-                    //   iconColor: Colors.grey[600]!,
-                    //   text: '${widget.thread.postCount}',
-                    //   backgroundColor: primaryLightColor,
-                    // ),
-                    Spacer(),
-                    TextButton.icon(
-                      onPressed: () => _showReplyModal(context, null),
-                      icon: Icon(Icons.reply, size: 20, color: primaryColor),
-                      label: Text(
-                        'Reply',
-                        style: TextStyle(
-                          color: primaryColor,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                      style: TextButton.styleFrom(
-                        backgroundColor: primaryLightColor,
-                        padding:
-                            EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ],
+              ),
             ),
-          ),
+            SizedBox(height: 8),
 
-          // Divider
-          Container(
-            margin: EdgeInsets.symmetric(horizontal: 16),
-            child: Row(
-              children: [
-                Text(
-                  'Replies',
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black87,
-                  ),
-                ),
-                SizedBox(width: 8),
-                // Container(
-                //   padding: EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-                //   decoration: BoxDecoration(
-                //     color: primaryLightColor,
-                //     borderRadius: BorderRadius.circular(12),
-                //   ),
-                //   child: Text(
-                //     '${widget.thread.postCount}',
-                //     style: TextStyle(
-                //       color: primaryColor,
-                //       fontWeight: FontWeight.w600,
-                //       fontSize: 12,
-                //     ),
-                //   ),
-                // ),
-              ],
-            ),
-          ),
-          SizedBox(height: 8),
-
-          // Comments Section
-          Expanded(
-            child: Container(
+            // Replies Section
+            Container(
               decoration: BoxDecoration(
                 color: Colors.grey[50],
                 borderRadius: BorderRadius.only(
@@ -841,30 +842,35 @@ class _ForumInsideState extends ConsumerState<ForumInside> {
                   topLeft: Radius.circular(20),
                   topRight: Radius.circular(20),
                 ),
-                child: SingleChildScrollView(
-                  child: Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: postsAsync.when(
-                      loading: () => Center(child: LoadingIndicator()),
-                      error: (error, stack) => Center(
-                        child: Text(
-                          'Error: $error',
-                          style: TextStyle(color: Colors.red),
-                        ),
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: postsAsync.when(
+                    loading: () => Center(child: LoadingIndicator()),
+                    error: (error, stack) => Center(
+                      child: Text(
+                        'Error: $error',
+                        style: TextStyle(color: Colors.red),
                       ),
-                      data: (posts) => _buildReplies(posts, 0),
                     ),
+                    data: (posts) => _buildReplies(posts, 0),
                   ),
                 ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () => _showReplyModal(context, null),
-        backgroundColor: primaryColor,
-        child: Icon(Icons.add_comment_outlined, color: Colors.white),
+      floatingActionButton: Container(
+        margin: EdgeInsets.only(bottom: 16, right: 16),
+        child: FloatingActionButton(
+          onPressed: () => _showReplyModal(context, null),
+          backgroundColor: primaryColor,
+          child: Icon(Icons.add_comment_outlined, color: Colors.white),
+          elevation: 4,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
+        ),
       ),
     );
   }

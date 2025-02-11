@@ -491,9 +491,13 @@ class _IndividualPageState extends ConsumerState<IndividualPage> {
                                 }
                               },
                               textEditingController: _controller,
-                              config: Config(
-                                height: 250,
-                              ),
+                              config: const Config(
+                                  height: 250,
+                                  emojiViewConfig: EmojiViewConfig(),
+                                  bottomActionBarConfig: BottomActionBarConfig(
+                                    backgroundColor: const Color(0xFF05104F),
+                                    buttonColor: const Color(0xFF05104F),
+                                  )),
                             ),
                           ),
                         ),
