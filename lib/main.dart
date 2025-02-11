@@ -38,8 +38,8 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Pravasi Tax',
       theme: ThemeData(
-        colorSchemeSeed: Colors.blue,
-    
+        colorSchemeSeed: Colors.white,
+
         // colorScheme: ColorScheme.fromSwatch().copyWith(
         //   primary: AppPalette.kPrimaryColor,
         //   secondary: AppPalette.kSecondaryColor,
