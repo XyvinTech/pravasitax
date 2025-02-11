@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pravasitax_flutter/src/interface/widgets/loading_indicator.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import 'package:webview_flutter_android/webview_flutter_android.dart';
 import 'package:webview_flutter_wkwebview/webview_flutter_wkwebview.dart';
@@ -147,8 +148,8 @@ class _VideoWebViewState extends State<VideoWebView> {
         WebViewWidget(controller: _controller),
         if (_isLoading)
           const Center(
-            child: CircularProgressIndicator(
-              valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+            child: LoadingIndicator(
+             
             ),
           ),
       ],

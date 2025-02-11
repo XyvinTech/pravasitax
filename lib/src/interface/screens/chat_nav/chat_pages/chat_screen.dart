@@ -122,7 +122,7 @@
 //             children: [
 //               Expanded(
 //                   child: newMessages.when(
-//                 loading: () => const Center(child: CircularProgressIndicator()),
+//                 loading: () => const Center(child: LoadingIndicator()),
 //                 error: (error, stack) {
 //                   debugPrint('Error loading messages: $error');
 //                   return Center(child: Text('Error: $error'));

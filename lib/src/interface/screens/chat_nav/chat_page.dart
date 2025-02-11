@@ -10,6 +10,7 @@ class ChatPage extends StatelessWidget {
     return DefaultTabController(
       length: 2,
       child: Scaffold(
+        backgroundColor: Colors.white,
         appBar: PreferredSize(
           preferredSize: Size.fromHeight(48), // Adjusts TabBar height
           child: Container(

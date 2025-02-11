@@ -4,7 +4,7 @@ import 'package:pravasitax_flutter/src/data/providers/news_provider.dart';
 import 'package:pravasitax_flutter/src/data/models/news_model.dart';
 import 'package:pravasitax_flutter/src/interface/widgets/video_web_view.dart';
 import 'dart:developer' as developer;
-
+import 'package:pravasitax_flutter/src/interface/widgets/loading_indicator.dart';
 class FeedPage extends ConsumerStatefulWidget {
   @override
   _FeedPageState createState() => _FeedPageState();
@@ -53,7 +53,7 @@ class _FeedPageState extends ConsumerState<FeedPage> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    CircularProgressIndicator(),
+                    LoadingIndicator(),
                     SizedBox(height: 16),
                     Text(
                       'Loading news...',

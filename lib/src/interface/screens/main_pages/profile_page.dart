@@ -1,19 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:pravasitax_flutter/src/data/providers/auth_provider.dart';
-import 'package:pravasitax_flutter/src/data/providers/user_provider.dart';
-import 'package:pravasitax_flutter/src/interface/screens/menu_pages/documents.dart';
-import 'package:pravasitax_flutter/src/interface/screens/menu_pages/help_center.dart';
-import 'package:pravasitax_flutter/src/interface/screens/menu_pages/my_filings.dart';
-import 'package:pravasitax_flutter/src/interface/screens/menu_pages/about.dart';
-import 'package:pravasitax_flutter/src/interface/screens/menu_pages/my_posts.dart';
-import 'package:pravasitax_flutter/src/interface/screens/menu_pages/privacy_policy.dart';
-import 'package:pravasitax_flutter/src/interface/screens/menu_pages/saved_news.dart';
-import 'package:pravasitax_flutter/src/interface/screens/menu_pages/subscriptions.dart';
-import 'package:pravasitax_flutter/src/interface/screens/menu_pages/termsandconditions.dart';
-import 'package:pravasitax_flutter/src/interface/screens/menu_pages/notification_setting.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pravasitax_flutter/src/data/models/user_model.dart';
+import 'package:pravasitax_flutter/src/data/providers/auth_provider.dart';
+import 'package:pravasitax_flutter/src/data/providers/user_provider.dart';
 
 class ProfilePage extends ConsumerWidget {
   @override
@@ -25,249 +15,261 @@ class ProfilePage extends ConsumerWidget {
         )
         .whenData((data) => data as User);
 
-    return Container(
-      color: Colors.white,
-      child: Column(
-        children: [
-          // Header with close button
-          Container(
-            padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  'Profile',
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
+    return Scaffold(
+      backgroundColor: Colors.grey[50],
+      body: Container(
+        child: Column(
+          children: [
+            // Custom App Bar with gradient
+            Container(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: [
+                    Theme.of(context).primaryColor,
+                    Theme.of(context).primaryColor.withOpacity(0.8),
+                  ],
+                ),
+              ),
+              padding: EdgeInsets.only(
+                top: MediaQuery.of(context).padding.top + 16,
+                bottom: 16,
+                left: 16,
+                right: 16,
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text(
+                    'Profile',
+                    style: TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
                   ),
-                ),
-                IconButton(
-                  icon: Icon(Icons.close),
-                  onPressed: () => Navigator.of(context).pop(),
-                ),
-              ],
+                  IconButton(
+                    icon: const Icon(Icons.close, color: Colors.white),
+                    onPressed: () => Navigator.of(context).pop(),
+                  ),
+                ],
+              ),
             ),
-          ),
-          Divider(),
-          // Profile content
-          Expanded(
-            child: userDetails.when(
-              data: (user) => SingleChildScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    // Profile Header Section
-                    Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: Row(
-                        children: [
-                          ClipRRect(
-                            borderRadius: BorderRadius.circular(50),
-                            child: Container(
-                              width: 70,
-                              height: 70,
-                              color: Colors.grey,
-                              child:
-                                  const Icon(Icons.person, color: Colors.white),
-                            ),
-                          ),
-                          const SizedBox(width: 16),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
+
+            // Profile content
+            Expanded(
+              child: userDetails.when(
+                data: (user) => SingleChildScrollView(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // Profile Card
+                      Card(
+                        margin: const EdgeInsets.all(16),
+                        elevation: 2,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(16),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.all(16),
+                          child: Column(
                             children: [
+                              Stack(
+                                alignment: Alignment.bottomRight,
+                                children: [
+                                  Container(
+                                    padding: const EdgeInsets.all(3),
+                                    decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      border: Border.all(
+                                        color: Theme.of(context).primaryColor,
+                                        width: 2,
+                                      ),
+                                    ),
+                                    child: CircleAvatar(
+                                      radius: 45,
+                                      backgroundColor: Colors.grey[200],
+                                      child: Icon(
+                                        Icons.person,
+                                        size: 45,
+                                        color: Colors.grey[400],
+                                      ),
+                                    ),
+                                  ),
+                                  CircleAvatar(
+                                    radius: 18,
+                                    backgroundColor:
+                                        Theme.of(context).primaryColor,
+                                    child: IconButton(
+                                      icon: const Icon(Icons.edit,
+                                          size: 16, color: Colors.white),
+                                      onPressed: () {
+                                        _showEditProfileModal(context, ref,
+                                            user, authState.token ?? '');
+                                      },
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(height: 16),
                               Text(
                                 user.name,
-                                style: TextStyle(
-                                  fontSize: 18,
+                                style: const TextStyle(
+                                  fontSize: 24,
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
                               if (user.email != null) ...[
-                                SizedBox(height: 4),
-                                Text(
-                                  user.email!,
-                                  style: TextStyle(color: Colors.grey),
-                                ),
+                                const SizedBox(height: 8),
+                                _buildInfoRow(Icons.email, user.email!),
                               ],
                               if (user.mobile != null) ...[
-                                SizedBox(height: 4),
-                                Text(
-                                  user.mobile!,
-                                  style: TextStyle(color: Colors.grey),
-                                ),
+                                const SizedBox(height: 8),
+                                _buildInfoRow(Icons.phone,
+                                    "${user.countryCode ?? '+91'} ${user.mobile!}"),
                               ],
                               if (user.residingCountry != null) ...[
-                                SizedBox(height: 4),
-                                Text(
-                                  user.residingCountry!,
-                                  style: TextStyle(color: Colors.grey),
-                                ),
+                                const SizedBox(height: 8),
+                                _buildInfoRow(
+                                    Icons.location_on, user.residingCountry!),
                               ],
                             ],
                           ),
-                          const Spacer(),
-                          TextButton(
-                            onPressed: () {
-                              _showEditProfileModal(
-                                  context, ref, user, authState.token ?? '');
-                            },
-                            child: const Text(
-                              'Edit',
-                              style: TextStyle(color: Colors.red),
-                            ),
-                          ),
-                        ],
+                        ),
                       ),
-                    ),
-                    // SizedBox(height: MediaQuery.of(context).size.height * 0.2),
-                    _buildSectionHeader('ACCOUNT'),
 
-                    // _buildListTile(
-                    //   context,
-                    //   Icons.help_outline,
-                    //   'Help Center',
-                    //   onTap: () {
-                    //     Navigator.push(
-                    //       context,
-                    //       MaterialPageRoute(builder: (context) => HelpCenterPage()),
-                    //     );
-                    //   },
-                    // ),
-                    // Container(color: Color(0xFFD9D9D9), height: 1),
-                    // _buildListTile(
-                    //   context,
-                    //   Icons.rule,
-                    //   'My Filings',
-                    //   onTap: () {
-                    //     Navigator.push(
-                    //       context,
-                    //       MaterialPageRoute(builder: (context) => MyFilingsPage()),
-                    //     );
-                    //   },
-                    // ),
-                    // Container(color: Color(0xFFD9D9D9), height: 1),
-                    // _buildListTile(
-                    //   context,
-                    //   Icons.rule,
-                    //   'About Us',
-                    //   onTap: () {
-                    //     Navigator.push(
-                    //       context,
-                    //       MaterialPageRoute(builder: (context) => AboutPage()),
-                    //     );
-                    //   },
-                    // ),
-                    // Container(color: Color(0xFFD9D9D9), height: 1),
-                    // _buildListTile(
-                    //   context,
-                    //   Icons.file_present_outlined,
-                    //   'Documents',
-                    //   onTap: () {
-                    //     Navigator.push(
-                    //       context,
-                    //       MaterialPageRoute(builder: (context) => DocumentsPage()),
-                    //     );
-                    //   },
-                    // ),
-                    // Container(color: Color(0xFFD9D9D9), height: 1),
-                    // _buildListTile(
-                    //   context,
-                    //   Icons.subscriptions_outlined,
-                    //   'Subscriptions',
-                    //   onTap: () {
-                    //     Navigator.push(
-                    //       context,
-                    //       MaterialPageRoute(
-                    //           builder: (context) => SubscriptionsPage()),
-                    //     );
-                    //   },
-                    // ),
-                    // Container(color: Color(0xFFD9D9D9), height: 1),
-                    // _buildListTile(
-                    //   context,
-                    //   Icons.post_add_outlined,
-                    //   'My Posts',
-                    //   onTap: () {
-                    //     Navigator.push(
-                    //       context,
-                    //       MaterialPageRoute(builder: (context) => MyPostsPage()),
-                    //     );
-                    //   },
-                    // ),
-                    // Container(color: Color(0xFFD9D9D9), height: 1),
-                    // _buildListTile(
-                    //   context,
-                    //   Icons.rule,
-                    //   'Privacy Policy',
-                    //   onTap: () {
-                    //     Navigator.push(
-                    //       context,
-                    //       MaterialPageRoute(
-                    //           builder: (context) => PrivacyPolicyPage()),
-                    //     );
-                    //   },
-                    // ),
-                    // Container(color: Color(0xFFD9D9D9), height: 1),
-                    // _buildListTile(
-                    //   context,
-                    //   Icons.save_alt_outlined,
-                    //   'Saved News',
-                    //   onTap: () => Navigator.push(
-                    //     context,
-                    //     MaterialPageRoute(builder: (context) => SavedNewsPage()),
-                    //   ),
-                    // ),
-                    // Container(color: Color(0xFFD9D9D9), height: 1),
-                    // _buildListTile(
-                    //   context,
-                    //   Icons.rule,
-                    //   'Terms and Conditions',
-                    //   onTap: () {
-                    //     Navigator.push(
-                    //       context,
-                    //       MaterialPageRoute(
-                    //           builder: (context) => TermsAndConditionsPage()),
-                    //     );
-                    //   },
-                    // ),
-                    // Container(color: Color(0xFFD9D9D9), height: 1),
-                    // _buildListTile(
-                    //   context,
-                    //   Icons.rule_outlined,
-                    //   'Notification Settings',
-                    //   onTap: () {
-                    //     Navigator.push(
-                    //       context,
-                    //       MaterialPageRoute(
-                    //           builder: (context) => NotificationSettingsPage()),
-                    //     );
-                    //   },
-                    // ),
+                      // Account Settings Section
+                      _buildSectionHeader('Account Settings'),
+                      Card(
+                        margin: const EdgeInsets.symmetric(horizontal: 16),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: Column(
+                          children: [
+                            _buildSettingsTile(
+                              context,
+                              icon: Icons.notifications_outlined,
+                              title: 'Notifications',
+                              subtitle: 'Manage your notification preferences',
+                            ),
+                            const Divider(height: 1),
+                            _buildSettingsTile(
+                              context,
+                              icon: Icons.security_outlined,
+                              title: 'Privacy & Security',
+                              subtitle: 'Control your privacy settings',
+                            ),
+                            const Divider(height: 1),
+                            _buildSettingsTile(
+                              context,
+                              icon: Icons.language_outlined,
+                              title: 'Language',
+                              subtitle: 'Change app language',
+                            ),
+                          ],
+                        ),
+                      ),
 
-                    Container(color: Color(0xFFF2F2F2), height: 15),
-                    _buildListTile(context, Icons.logout, 'Logout', onTap: () {
-                      _showLogoutDialog(context);
-                    }),
-                    Container(color: Color(0xFFF2F2F2), height: 15),
-                    _buildListTile(
-                        context, Icons.delete_forever, 'Delete Account',
-                        onTap: () {
-                      _showDeleteAccountDialog(context);
-                    }),
-                    Container(color: Color(0xFFF2F2F2), height: 100),
+                      const SizedBox(height: 24),
 
-                    const SizedBox(height: 20),
-                  ],
+                      // Danger Zone
+                      _buildSectionHeader('Danger Zone'),
+                      Card(
+                        margin: const EdgeInsets.symmetric(horizontal: 16),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: Column(
+                          children: [
+                            _buildDangerTile(
+                              context,
+                              icon: Icons.logout,
+                              title: 'Logout',
+                              onTap: () => _showLogoutDialog(context, ref),
+                            ),
+                            const Divider(height: 1),
+                            _buildDangerTile(
+                              context,
+                              icon: Icons.delete_forever,
+                              title: 'Delete Account',
+                              isDestructive: true,
+                              onTap: () => _showDeleteAccountDialog(context),
+                            ),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(height: 32),
+                    ],
+                  ),
                 ),
-              ),
-              loading: () => Center(child: CircularProgressIndicator()),
-              error: (error, stack) => Center(
-                child: Text('Error loading profile: $error'),
+                loading: () => Center(
+                  child: CircularProgressIndicator(
+                    valueColor: AlwaysStoppedAnimation<Color>(
+                      Theme.of(context).primaryColor,
+                    ),
+                  ),
+                ),
+                error: (error, stack) => _buildErrorState(error.toString()),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildInfoRow(IconData icon, String text) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Icon(icon, size: 16, color: Colors.grey),
+        const SizedBox(width: 8),
+        Text(
+          text,
+          style: TextStyle(color: Colors.grey[600]),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildErrorState(String error) {
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.all(24),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Icon(Icons.error_outline, size: 48, color: Colors.red),
+            const SizedBox(height: 16),
+            const Text(
+              'Error loading profile',
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              error,
+              style: TextStyle(fontSize: 14, color: Colors.grey[600]),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 24),
+            ElevatedButton.icon(
+              onPressed: () {
+                // Add refresh functionality here
+              },
+              icon: const Icon(Icons.refresh),
+              label: const Text('Try Again'),
+              style: ElevatedButton.styleFrom(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -285,49 +287,48 @@ class ProfilePage extends ConsumerWidget {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
-      ),
+      backgroundColor: Colors.transparent,
       builder: (BuildContext context) {
-        return Padding(
+        return Container(
           padding: EdgeInsets.only(
-            left: 16,
-            right: 16,
-            top: 16,
             bottom: MediaQuery.of(context).viewInsets.bottom,
           ),
-          child: Form(
-            key: formKey,
-            child: Wrap(
-              children: [
-                Column(
+          decoration: const BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+          ),
+          child: SafeArea(
+            child: Padding(
+              padding: const EdgeInsets.all(24),
+              child: Form(
+                key: formKey,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text(
+                        const Text(
                           'Edit Profile',
                           style: TextStyle(
-                            fontSize: 20,
+                            fontSize: 24,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
                         IconButton(
-                          icon: const Icon(Icons.close, color: Colors.black),
-                          onPressed: () => Navigator.of(context).pop(),
+                          icon: const Icon(Icons.close),
+                          onPressed: () => Navigator.pop(context),
                         ),
                       ],
                     ),
-                    const SizedBox(height: 16),
-                    TextFormField(
+                    const SizedBox(height: 24),
+                    _buildTextField(
                       controller: nameController,
-                      decoration: InputDecoration(
-                        labelText: "Name",
-                        border: OutlineInputBorder(),
-                      ),
+                      label: 'Full Name',
+                      icon: Icons.person_outline,
                       validator: (value) {
-                        if (value == null || value.isEmpty) {
+                        if (value?.isEmpty ?? true) {
                           return 'Please enter your name';
                         }
                         return null;
@@ -338,121 +339,84 @@ class ProfilePage extends ConsumerWidget {
                       children: [
                         Expanded(
                           flex: 2,
-                          child: TextFormField(
+                          child: _buildTextField(
                             controller: countryCodeController,
-                            decoration: InputDecoration(
-                              labelText: "Code",
-                              border: OutlineInputBorder(),
-                            ),
+                            label: 'Code',
+                            icon: Icons.flag_outlined,
                           ),
                         ),
-                        SizedBox(width: 8),
+                        const SizedBox(width: 12),
                         Expanded(
                           flex: 5,
-                          child: TextFormField(
+                          child: _buildTextField(
                             controller: mobileController,
-                            decoration: InputDecoration(
-                              labelText: "Phone Number",
-                              border: OutlineInputBorder(),
-                            ),
+                            label: 'Phone Number',
+                            icon: Icons.phone_outlined,
                             keyboardType: TextInputType.phone,
                           ),
                         ),
                       ],
                     ),
                     const SizedBox(height: 16),
-                    TextFormField(
+                    _buildTextField(
                       controller: residingCountryController,
-                      decoration: InputDecoration(
-                        labelText: "Residing Country",
-                        border: OutlineInputBorder(),
-                      ),
+                      label: 'Country',
+                      icon: Icons.location_on_outlined,
                     ),
                     if (user.email != null) ...[
                       const SizedBox(height: 16),
-                      TextFormField(
+                      _buildTextField(
                         initialValue: user.email,
+                        label: 'Email',
+                        icon: Icons.email_outlined,
                         enabled: false,
-                        decoration: InputDecoration(
-                          labelText: "Email ID",
-                          border: OutlineInputBorder(),
-                          filled: true,
-                          fillColor: Colors.grey[200],
-                        ),
                       ),
                     ],
                     const SizedBox(height: 24),
-                    Center(
+                    SizedBox(
+                      width: double.infinity,
                       child: Consumer(
                         builder: (context, ref, child) {
                           final updateState = ref.watch(userProvider);
 
                           return updateState.when(
                             data: (_) => ElevatedButton(
-                              onPressed: () async {
-                                if (formKey.currentState!.validate()) {
-                                  try {
-                                    await ref
-                                        .read(userProvider.notifier)
-                                        .updateUser(
-                                          userToken: token,
-                                          name: nameController.text,
-                                          mobile: mobileController.text,
-                                          countryCode:
-                                              countryCodeController.text,
-                                          residingCountry:
-                                              residingCountryController.text,
-                                        );
-
-                                    // Refresh user details
-                                    ref.refresh(userDetailsProvider(token));
-
-                                    if (context.mounted) {
-                                      Navigator.pop(context);
-                                      ScaffoldMessenger.of(context)
-                                          .showSnackBar(
-                                        SnackBar(
-                                            content: Text(
-                                                'Profile updated successfully')),
-                                      );
-                                    }
-                                  } catch (e) {
-                                    if (context.mounted) {
-                                      ScaffoldMessenger.of(context)
-                                          .showSnackBar(
-                                        SnackBar(
-                                            content: Text(
-                                                'Failed to update profile: $e')),
-                                      );
-                                    }
-                                  }
-                                }
-                              },
+                              onPressed: () => _handleProfileUpdate(
+                                context,
+                                ref,
+                                formKey,
+                                token,
+                                nameController.text,
+                                mobileController.text,
+                                countryCodeController.text,
+                                residingCountryController.text,
+                              ),
                               child: const Text(
-                                "Save Changes",
-                                style: TextStyle(color: Colors.black),
+                                'Save Changes',
+                                style: TextStyle(fontSize: 16),
                               ),
                               style: ElevatedButton.styleFrom(
-                                backgroundColor: const Color(0xFFF9B406),
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 48,
-                                  vertical: 16,
-                                ),
+                                backgroundColor: Theme.of(context).primaryColor,
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 16),
                                 shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(8),
+                                  borderRadius: BorderRadius.circular(12),
                                 ),
                               ),
                             ),
-                            loading: () => CircularProgressIndicator(),
+                            loading: () => const Center(
+                              child: CircularProgressIndicator(),
+                            ),
                             error: (error, _) => Column(
                               children: [
-                                Text('Error: $error',
-                                    style: TextStyle(color: Colors.red)),
+                                Text(
+                                  'Error: $error',
+                                  style: const TextStyle(color: Colors.red),
+                                ),
+                                const SizedBox(height: 8),
                                 ElevatedButton(
-                                  onPressed: () {
-                                    ref.refresh(userProvider);
-                                  },
-                                  child: Text('Retry'),
+                                  onPressed: () => ref.refresh(userProvider),
+                                  child: const Text('Retry'),
                                 ),
                               ],
                             ),
@@ -460,10 +424,9 @@ class ProfilePage extends ConsumerWidget {
                         },
                       ),
                     ),
-                    const SizedBox(height: 16),
                   ],
                 ),
-              ],
+              ),
             ),
           ),
         );
@@ -471,68 +434,89 @@ class ProfilePage extends ConsumerWidget {
     );
   }
 
-  Widget _buildSectionHeader(String title) {
-    return Container(
-      width: double.infinity,
-      color: const Color(0xFFF2F2F2),
-      padding: const EdgeInsets.only(left: 16.0, top: 10, bottom: 10),
-      child: Text(
-        title,
-        style: const TextStyle(
-          fontWeight: FontWeight.bold,
-          color: Colors.grey,
+  Widget _buildTextField({
+    TextEditingController? controller,
+    String? initialValue,
+    required String label,
+    required IconData icon,
+    TextInputType? keyboardType,
+    bool enabled = true,
+    String? Function(String?)? validator,
+  }) {
+    return TextFormField(
+      controller: controller,
+      initialValue: initialValue,
+      enabled: enabled,
+      decoration: InputDecoration(
+        labelText: label,
+        prefixIcon: Icon(icon),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide(color: Colors.grey[300]!),
         ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide(color: Colors.grey[300]!),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: const BorderSide(color: Colors.blue),
+        ),
+        filled: !enabled,
+        fillColor: enabled ? null : Colors.grey[100],
       ),
+      keyboardType: keyboardType,
+      validator: validator,
     );
   }
 
-  Widget _buildListTile(BuildContext context, IconData icon, String title,
-      {Function()? onTap}) {
-    return ListTile(
-      leading: CircleAvatar(
-        backgroundColor: Colors.white,
-        child: Icon(icon, color: const Color(0xFF797474)),
-      ),
-      title: Text(title, style: const TextStyle(color: Colors.black)),
-      trailing: SvgPicture.asset(
-        'assets/icons/polygon.svg',
-        height: 16,
-        width: 16,
-        color: const Color(0xFFC4C4C4),
-      ),
-      onTap: onTap ?? () {},
-    );
-  }
-
-  void _showLogoutDialog(BuildContext context) {
+  void _showLogoutDialog(BuildContext context, WidgetRef ref) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text("Logout"),
-          content: const Text("Are you sure you want to logout?"),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
+          title: const Row(
+            children: [
+              Icon(Icons.logout, color: Colors.orange),
+              SizedBox(width: 8),
+              Text("Logout"),
+            ],
+          ),
+          content: Text(
+            "Are you sure you want to logout? You'll need to sign in again to access your account.",
+            style: TextStyle(color: Colors.grey[700]),
+          ),
           actions: [
             TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: const Text("Cancel"),
+              onPressed: () => Navigator.of(context).pop(),
+              child: Text(
+                "Cancel",
+                style: TextStyle(color: Colors.grey[600]),
+              ),
             ),
-            Consumer(
-              builder: (context, ref, child) {
-                return TextButton(
-                  onPressed: () async {
-                    await ref.read(authProvider.notifier).logout();
-                    if (context.mounted) {
-                      Navigator.of(context).pushNamedAndRemoveUntil(
-                        '/',
-                        (route) => false,
-                      );
-                    }
-                  },
-                  child: const Text("Logout"),
-                );
+            ElevatedButton(
+              onPressed: () async {
+                await ref.read(authProvider.notifier).logout();
+                if (context.mounted) {
+                  Navigator.of(context).pushNamedAndRemoveUntil(
+                    '/',
+                    (route) => false,
+                  );
+                }
               },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.orange,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+              ),
+              child: const Text(
+                "Logout",
+                style: TextStyle(color: Colors.white),
+              ),
             ),
           ],
         );
@@ -545,25 +529,237 @@ class ProfilePage extends ConsumerWidget {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text("Delete Account"),
-          content: const Text(
-              "Are you sure you want to delete your account? This action is irreversible."),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
+          title: const Row(
+            children: [
+              Icon(Icons.warning_amber_rounded, color: Colors.red),
+              SizedBox(width: 8),
+              Text("Delete Account"),
+            ],
+          ),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text(
+                "Are you sure you want to delete your account?",
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(height: 8),
+              Text(
+                "This action cannot be undone. All your data will be permanently deleted.",
+                style: TextStyle(color: Colors.grey[700]),
+              ),
+              const SizedBox(height: 16),
+              Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: Colors.red[50],
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Row(
+                  children: [
+                    const Icon(Icons.info_outline, color: Colors.red, size: 20),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: Text(
+                        "You'll lose access to all your saved data, preferences, and history.",
+                        style: TextStyle(
+                          color: Colors.red[900],
+                          fontSize: 12,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
           actions: [
             TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: const Text("Cancel"),
+              onPressed: () => Navigator.of(context).pop(),
+              child: Text(
+                "Cancel",
+                style: TextStyle(color: Colors.grey[600]),
+              ),
             ),
-            TextButton(
+            ElevatedButton(
               onPressed: () {
+                // Implement delete account functionality
                 Navigator.of(context).pop();
               },
-              child: const Text("Delete"),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.red,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+              ),
+              child: const Text(
+                "Delete Account",
+                style: TextStyle(color: Colors.white),
+              ),
             ),
           ],
         );
       },
+    );
+  }
+
+  Future<void> _handleProfileUpdate(
+    BuildContext context,
+    WidgetRef ref,
+    GlobalKey<FormState> formKey,
+    String token,
+    String name,
+    String mobile,
+    String countryCode,
+    String residingCountry,
+  ) async {
+    if (formKey.currentState!.validate()) {
+      try {
+        await ref.read(userProvider.notifier).updateUser(
+              userToken: token,
+              name: name,
+              mobile: mobile,
+              countryCode: countryCode,
+              residingCountry: residingCountry,
+            );
+
+        ref.refresh(userDetailsProvider(token));
+
+        if (context.mounted) {
+          Navigator.pop(context);
+          _showSuccessSnackBar(context, 'Profile updated successfully');
+        }
+      } catch (e) {
+        if (context.mounted) {
+          _showErrorSnackBar(context, 'Failed to update profile: $e');
+        }
+      }
+    }
+  }
+
+  void _showSuccessSnackBar(BuildContext context, String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Row(
+          children: [
+            const Icon(Icons.check_circle, color: Colors.white),
+            const SizedBox(width: 8),
+            Text(message),
+          ],
+        ),
+        backgroundColor: Colors.green,
+        behavior: SnackBarBehavior.floating,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(8),
+        ),
+        margin: const EdgeInsets.all(16),
+      ),
+    );
+  }
+
+  void _showErrorSnackBar(BuildContext context, String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Row(
+          children: [
+            const Icon(Icons.error_outline, color: Colors.white),
+            const SizedBox(width: 8),
+            Expanded(child: Text(message)),
+          ],
+        ),
+        backgroundColor: Colors.red,
+        behavior: SnackBarBehavior.floating,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(8),
+        ),
+        margin: const EdgeInsets.all(16),
+      ),
+    );
+  }
+
+  Widget _buildSectionHeader(String title) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(24, 24, 24, 12),
+      child: Text(
+        title.toUpperCase(),
+        style: TextStyle(
+          fontSize: 13,
+          fontWeight: FontWeight.w600,
+          color: Colors.grey[600],
+          letterSpacing: 1.2,
+        ),
+      ),
+    );
+  }
+
+  Widget _buildSettingsTile(
+    BuildContext context, {
+    required IconData icon,
+    required String title,
+    required String subtitle,
+    VoidCallback? onTap,
+  }) {
+    return ListTile(
+      leading: Container(
+        padding: const EdgeInsets.all(8),
+        decoration: BoxDecoration(
+          color: Theme.of(context).primaryColor.withOpacity(0.1),
+          borderRadius: BorderRadius.circular(8),
+        ),
+        child: Icon(icon, color: Theme.of(context).primaryColor),
+      ),
+      title: Text(
+        title,
+        style: const TextStyle(
+          fontWeight: FontWeight.w600,
+        ),
+      ),
+      subtitle: Text(
+        subtitle,
+        style: TextStyle(
+          fontSize: 12,
+          color: Colors.grey[600],
+        ),
+      ),
+      trailing: const Icon(Icons.chevron_right, color: Colors.grey),
+      onTap: onTap,
+    );
+  }
+
+  Widget _buildDangerTile(
+    BuildContext context, {
+    required IconData icon,
+    required String title,
+    bool isDestructive = false,
+    VoidCallback? onTap,
+  }) {
+    return ListTile(
+      leading: Container(
+        padding: const EdgeInsets.all(8),
+        decoration: BoxDecoration(
+          color: isDestructive ? Colors.red[50] : Colors.orange[50],
+          borderRadius: BorderRadius.circular(8),
+        ),
+        child: Icon(
+          icon,
+          color: isDestructive ? Colors.red : Colors.orange,
+        ),
+      ),
+      title: Text(
+        title,
+        style: TextStyle(
+          fontWeight: FontWeight.w600,
+          color: isDestructive ? Colors.red : Colors.orange,
+        ),
+      ),
+      onTap: onTap,
     );
   }
 }

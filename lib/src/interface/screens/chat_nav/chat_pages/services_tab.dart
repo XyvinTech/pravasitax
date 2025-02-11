@@ -4,7 +4,7 @@ import 'package:pravasitax_flutter/src/data/providers/chat_provider.dart';
 import 'package:pravasitax_flutter/src/data/services/secure_storage_service.dart';
 import 'package:pravasitax_flutter/src/interface/screens/chat_nav/chat_pages/chat_screen.dart';
 import 'package:pravasitax_flutter/src/interface/screens/chat_nav/chat_pages/chat_screen_test.dart';
-
+import 'package:pravasitax_flutter/src/interface/widgets/loading_indicator.dart';
 class ServicesTab extends ConsumerWidget {
   const ServicesTab({Key? key}) : super(key: key);
 
@@ -21,7 +21,7 @@ class ServicesTab extends ConsumerWidget {
         final conversationsAsync = ref.watch(conversationsProvider(userToken));
 
         return conversationsAsync.when(
-          loading: () => const Center(child: CircularProgressIndicator()),
+          loading: () => const Center(child: LoadingIndicator()),
           error: (error, stack) => Center(child: Text('Error: $error')),
           data: (conversations) {
             final serviceConversations = conversations
@@ -57,12 +57,16 @@ class ServicesTab extends ConsumerWidget {
                       borderRadius: BorderRadius.circular(16),
                     ),
                     child: InkWell(
-                      onTap: () async {          final userId = await SecureStorageService.getUserId();
-                        final userToken = await SecureStorageService.getAuthToken();
+                      onTap: () async {
+                        final userId = await SecureStorageService.getUserId();
+                        final userToken =
+                            await SecureStorageService.getAuthToken();
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => IndividualPage(userId:userId??'' , userToken: userToken??'',
+                            builder: (context) => IndividualPage(
+                              userId: userId ?? '',
+                              userToken: userToken ?? '',
                               title: conversation.title,
                               imageUrl: staff?.avatar ??
                                   'https://pravasitax.com/assets/images/logo.png',
