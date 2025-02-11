@@ -6,13 +6,14 @@ import 'package:pravasitax_flutter/src/data/providers/auth_provider.dart';
 import 'package:pravasitax_flutter/src/data/providers/user_provider.dart';
 
 class ProfilePage extends ConsumerWidget {
+  static const Color primaryColor = Color(0xFFF8B50C);
+  static const Color secondaryColor = Color(0xFF05104F);
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final authState = ref.watch(authProvider);
     final userDetails = ref
-        .watch(
-          userDetailsProvider(authState.token ?? ''),
-        )
+        .watch(userDetailsProvider(authState.token ?? ''))
         .whenData((data) => data as User);
 
     return Scaffold(
@@ -20,18 +21,8 @@ class ProfilePage extends ConsumerWidget {
       body: Container(
         child: Column(
           children: [
-            // Custom App Bar with gradient
             Container(
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                  colors: [
-                    Theme.of(context).primaryColor,
-                    Theme.of(context).primaryColor.withOpacity(0.8),
-                  ],
-                ),
-              ),
+              color: secondaryColor,
               padding: EdgeInsets.only(
                 top: MediaQuery.of(context).padding.top + 16,
                 bottom: 16,
@@ -45,7 +36,7 @@ class ProfilePage extends ConsumerWidget {
                     'Profile',
                     style: TextStyle(
                       fontSize: 24,
-                      fontWeight: FontWeight.bold,
+                      fontWeight: FontWeight.w600,
                       color: Colors.white,
                     ),
                   ),
@@ -56,146 +47,192 @@ class ProfilePage extends ConsumerWidget {
                 ],
               ),
             ),
-
-            // Profile content
             Expanded(
               child: userDetails.when(
                 data: (user) => SingleChildScrollView(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      // Profile Card
-                      Card(
+                      Container(
                         margin: const EdgeInsets.all(16),
-                        elevation: 2,
-                        shape: RoundedRectangleBorder(
+                        decoration: BoxDecoration(
+                          color: Colors.white,
                           borderRadius: BorderRadius.circular(16),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.05),
+                              blurRadius: 10,
+                              offset: const Offset(0, 5),
+                            ),
+                          ],
                         ),
-                        child: Padding(
-                          padding: const EdgeInsets.all(16),
-                          child: Column(
-                            children: [
-                              Stack(
-                                alignment: Alignment.bottomRight,
+                        child: Column(
+                          children: [
+                            Container(
+                              padding: const EdgeInsets.all(24),
+                              child: Column(
                                 children: [
-                                  Container(
-                                    padding: const EdgeInsets.all(3),
-                                    decoration: BoxDecoration(
-                                      shape: BoxShape.circle,
-                                      border: Border.all(
-                                        color: Theme.of(context).primaryColor,
-                                        width: 2,
+                                  Stack(
+                                    alignment: Alignment.bottomRight,
+                                    children: [
+                                      Container(
+                                        padding: const EdgeInsets.all(4),
+                                        decoration: BoxDecoration(
+                                          shape: BoxShape.circle,
+                                          border: Border.all(
+                                            color: primaryColor,
+                                            width: 2,
+                                          ),
+                                        ),
+                                        child: CircleAvatar(
+                                          radius: 50,
+                                          backgroundColor: Colors.grey[100],
+                                          child: Text(
+                                            user.name
+                                                .substring(0, 1)
+                                                .toUpperCase(),
+                                            style: const TextStyle(
+                                              fontSize: 32,
+                                              fontWeight: FontWeight.bold,
+                                              color: secondaryColor,
+                                            ),
+                                          ),
+                                        ),
                                       ),
-                                    ),
-                                    child: CircleAvatar(
-                                      radius: 45,
-                                      backgroundColor: Colors.grey[200],
-                                      child: Icon(
-                                        Icons.person,
-                                        size: 45,
-                                        color: Colors.grey[400],
+                                      Container(
+                                        decoration: BoxDecoration(
+                                          shape: BoxShape.circle,
+                                          color: primaryColor,
+                                          border: Border.all(
+                                            color: Colors.white,
+                                            width: 2,
+                                          ),
+                                        ),
+                                        child: IconButton(
+                                          icon: const Icon(
+                                            Icons.edit,
+                                            size: 16,
+                                            color: Colors.white,
+                                          ),
+                                          onPressed: () {
+                                            _showEditProfileModal(
+                                              context,
+                                              ref,
+                                              user,
+                                              authState.token ?? '',
+                                            );
+                                          },
+                                        ),
                                       ),
-                                    ),
+                                    ],
                                   ),
-                                  CircleAvatar(
-                                    radius: 18,
-                                    backgroundColor:
-                                        Theme.of(context).primaryColor,
-                                    child: IconButton(
-                                      icon: const Icon(Icons.edit,
-                                          size: 16, color: Colors.white),
-                                      onPressed: () {
-                                        _showEditProfileModal(context, ref,
-                                            user, authState.token ?? '');
-                                      },
+                                  const SizedBox(height: 24),
+                                  Text(
+                                    user.name,
+                                    style: const TextStyle(
+                                      fontSize: 24,
+                                      fontWeight: FontWeight.bold,
+                                      color: secondaryColor,
                                     ),
                                   ),
                                 ],
                               ),
-                              const SizedBox(height: 16),
-                              Text(
-                                user.name,
-                                style: const TextStyle(
-                                  fontSize: 24,
-                                  fontWeight: FontWeight.bold,
-                                ),
+                            ),
+                            const Divider(height: 1),
+                            Padding(
+                              padding: const EdgeInsets.all(24),
+                              child: Column(
+                                children: [
+                                  if (user.email != null &&
+                                      user.email!.isNotEmpty) ...[
+                                    _buildInfoTile(
+                                      icon: Icons.email_outlined,
+                                      title: 'Email',
+                                      value: user.email!,
+                                    ),
+                                    const SizedBox(height: 16),
+                                  ],
+                                  if (user.mobile != null &&
+                                      user.mobile!.isNotEmpty) ...[
+                                    _buildInfoTile(
+                                      icon: Icons.phone_outlined,
+                                      title: 'Phone',
+                                      value:
+                                          "${user.countryCode ?? '+91'} ${user.mobile!}",
+                                    ),
+                                    const SizedBox(height: 16),
+                                  ],
+                                  if (user.residingCountry != null &&
+                                      user.residingCountry!.isNotEmpty)
+                                    _buildInfoTile(
+                                      icon: Icons.location_on_outlined,
+                                      title: 'Location',
+                                      value: user.residingCountry!,
+                                    ),
+                                ],
                               ),
-                              if (user.email != null) ...[
-                                const SizedBox(height: 8),
-                                _buildInfoRow(Icons.email, user.email!),
-                              ],
-                              if (user.mobile != null) ...[
-                                const SizedBox(height: 8),
-                                _buildInfoRow(Icons.phone,
-                                    "${user.countryCode ?? '+91'} ${user.mobile!}"),
-                              ],
-                              if (user.residingCountry != null) ...[
-                                const SizedBox(height: 8),
-                                _buildInfoRow(
-                                    Icons.location_on, user.residingCountry!),
-                              ],
-                            ],
-                          ),
-                        ),
-                      ),
-
-                      // Account Settings Section
-                      _buildSectionHeader('Account Settings'),
-                      Card(
-                        margin: const EdgeInsets.symmetric(horizontal: 16),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        child: Column(
-                          children: [
-                            _buildSettingsTile(
-                              context,
-                              icon: Icons.notifications_outlined,
-                              title: 'Notifications',
-                              subtitle: 'Manage your notification preferences',
-                            ),
-                            const Divider(height: 1),
-                            _buildSettingsTile(
-                              context,
-                              icon: Icons.security_outlined,
-                              title: 'Privacy & Security',
-                              subtitle: 'Control your privacy settings',
-                            ),
-                            const Divider(height: 1),
-                            _buildSettingsTile(
-                              context,
-                              icon: Icons.language_outlined,
-                              title: 'Language',
-                              subtitle: 'Change app language',
                             ),
                           ],
                         ),
                       ),
-
-                      const SizedBox(height: 24),
-
-                      // Danger Zone
-                      _buildSectionHeader('Danger Zone'),
-                      Card(
+                      const SizedBox(height: 16),
+                      Container(
                         margin: const EdgeInsets.symmetric(horizontal: 16),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(16),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.05),
+                              blurRadius: 10,
+                              offset: const Offset(0, 5),
+                            ),
+                          ],
                         ),
                         child: Column(
                           children: [
-                            _buildDangerTile(
-                              context,
-                              icon: Icons.logout,
-                              title: 'Logout',
+                            ListTile(
                               onTap: () => _showLogoutDialog(context, ref),
+                              leading: Container(
+                                padding: const EdgeInsets.all(8),
+                                decoration: BoxDecoration(
+                                  color: primaryColor.withOpacity(0.1),
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                                child: const Icon(
+                                  Icons.logout_rounded,
+                                  color: primaryColor,
+                                ),
+                              ),
+                              title: const Text(
+                                'Logout',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w600,
+                                  color: secondaryColor,
+                                ),
+                              ),
                             ),
                             const Divider(height: 1),
-                            _buildDangerTile(
-                              context,
-                              icon: Icons.delete_forever,
-                              title: 'Delete Account',
-                              isDestructive: true,
+                            ListTile(
                               onTap: () => _showDeleteAccountDialog(context),
+                              leading: Container(
+                                padding: const EdgeInsets.all(8),
+                                decoration: BoxDecoration(
+                                  color: Colors.red[50],
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                                child: const Icon(
+                                  Icons.delete_forever,
+                                  color: Colors.red,
+                                ),
+                              ),
+                              title: const Text(
+                                'Delete Account',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w600,
+                                  color: Colors.red,
+                                ),
+                              ),
                             ),
                           ],
                         ),
@@ -204,11 +241,9 @@ class ProfilePage extends ConsumerWidget {
                     ],
                   ),
                 ),
-                loading: () => Center(
+                loading: () => const Center(
                   child: CircularProgressIndicator(
-                    valueColor: AlwaysStoppedAnimation<Color>(
-                      Theme.of(context).primaryColor,
-                    ),
+                    valueColor: AlwaysStoppedAnimation<Color>(primaryColor),
                   ),
                 ),
                 error: (error, stack) => _buildErrorState(error.toString()),
@@ -220,57 +255,47 @@ class ProfilePage extends ConsumerWidget {
     );
   }
 
-  Widget _buildInfoRow(IconData icon, String text) {
+  Widget _buildInfoTile({
+    required IconData icon,
+    required String title,
+    required String value,
+  }) {
     return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Icon(icon, size: 16, color: Colors.grey),
-        const SizedBox(width: 8),
-        Text(
-          text,
-          style: TextStyle(color: Colors.grey[600]),
+        Container(
+          padding: const EdgeInsets.all(8),
+          decoration: BoxDecoration(
+            color: primaryColor.withOpacity(0.1),
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: Icon(icon, color: primaryColor, size: 20),
         ),
-      ],
-    );
-  }
-
-  Widget _buildErrorState(String error) {
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.all(24),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Icon(Icons.error_outline, size: 48, color: Colors.red),
-            const SizedBox(height: 16),
-            const Text(
-              'Error loading profile',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              error,
-              style: TextStyle(fontSize: 14, color: Colors.grey[600]),
-              textAlign: TextAlign.center,
-            ),
-            const SizedBox(height: 24),
-            ElevatedButton.icon(
-              onPressed: () {
-                // Add refresh functionality here
-              },
-              icon: const Icon(Icons.refresh),
-              label: const Text('Try Again'),
-              style: ElevatedButton.styleFrom(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8),
+        const SizedBox(width: 16),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                title,
+                style: const TextStyle(
+                  fontSize: 12,
+                  color: Colors.grey,
+                  fontWeight: FontWeight.w500,
                 ),
               ),
-            ),
-          ],
+              const SizedBox(height: 4),
+              Text(
+                value,
+                style: const TextStyle(
+                  fontSize: 16,
+                  color: secondaryColor,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ],
+          ),
         ),
-      ),
+      ],
     );
   }
 
@@ -480,14 +505,16 @@ class ProfilePage extends ConsumerWidget {
           ),
           title: const Row(
             children: [
-              Icon(Icons.logout, color: Colors.orange),
+              Icon(Icons.logout_rounded, color: primaryColor),
               SizedBox(width: 8),
-              Text("Logout"),
+              Text(
+                "Logout",
+                style: TextStyle(color: secondaryColor),
+              ),
             ],
           ),
-          content: Text(
+          content: const Text(
             "Are you sure you want to logout? You'll need to sign in again to access your account.",
-            style: TextStyle(color: Colors.grey[700]),
           ),
           actions: [
             TextButton(
@@ -508,7 +535,7 @@ class ProfilePage extends ConsumerWidget {
                 }
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.orange,
+                backgroundColor: primaryColor,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(8),
                 ),
@@ -548,35 +575,13 @@ class ProfilePage extends ConsumerWidget {
                 style: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
+                  color: secondaryColor,
                 ),
               ),
               const SizedBox(height: 8),
               Text(
                 "This action cannot be undone. All your data will be permanently deleted.",
                 style: TextStyle(color: Colors.grey[700]),
-              ),
-              const SizedBox(height: 16),
-              Container(
-                padding: const EdgeInsets.all(12),
-                decoration: BoxDecoration(
-                  color: Colors.red[50],
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: Row(
-                  children: [
-                    const Icon(Icons.info_outline, color: Colors.red, size: 20),
-                    const SizedBox(width: 8),
-                    Expanded(
-                      child: Text(
-                        "You'll lose access to all your saved data, preferences, and history.",
-                        style: TextStyle(
-                          color: Colors.red[900],
-                          fontSize: 12,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
               ),
             ],
           ),
@@ -684,82 +689,49 @@ class ProfilePage extends ConsumerWidget {
     );
   }
 
-  Widget _buildSectionHeader(String title) {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(24, 24, 24, 12),
-      child: Text(
-        title.toUpperCase(),
-        style: TextStyle(
-          fontSize: 13,
-          fontWeight: FontWeight.w600,
-          color: Colors.grey[600],
-          letterSpacing: 1.2,
+  Widget _buildErrorState(String error) {
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.all(24),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Icon(Icons.error_outline, size: 48, color: Colors.red),
+            const SizedBox(height: 16),
+            const Text(
+              'Error loading profile',
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+                color: secondaryColor,
+              ),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              error,
+              style: TextStyle(fontSize: 14, color: Colors.grey[600]),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 24),
+            ElevatedButton.icon(
+              onPressed: () {
+                // Add refresh functionality here
+              },
+              icon: const Icon(Icons.refresh),
+              label: const Text('Try Again'),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: primaryColor,
+                foregroundColor: Colors.white,
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+              ),
+            ),
+          ],
         ),
       ),
-    );
-  }
-
-  Widget _buildSettingsTile(
-    BuildContext context, {
-    required IconData icon,
-    required String title,
-    required String subtitle,
-    VoidCallback? onTap,
-  }) {
-    return ListTile(
-      leading: Container(
-        padding: const EdgeInsets.all(8),
-        decoration: BoxDecoration(
-          color: Theme.of(context).primaryColor.withOpacity(0.1),
-          borderRadius: BorderRadius.circular(8),
-        ),
-        child: Icon(icon, color: Theme.of(context).primaryColor),
-      ),
-      title: Text(
-        title,
-        style: const TextStyle(
-          fontWeight: FontWeight.w600,
-        ),
-      ),
-      subtitle: Text(
-        subtitle,
-        style: TextStyle(
-          fontSize: 12,
-          color: Colors.grey[600],
-        ),
-      ),
-      trailing: const Icon(Icons.chevron_right, color: Colors.grey),
-      onTap: onTap,
-    );
-  }
-
-  Widget _buildDangerTile(
-    BuildContext context, {
-    required IconData icon,
-    required String title,
-    bool isDestructive = false,
-    VoidCallback? onTap,
-  }) {
-    return ListTile(
-      leading: Container(
-        padding: const EdgeInsets.all(8),
-        decoration: BoxDecoration(
-          color: isDestructive ? Colors.red[50] : Colors.orange[50],
-          borderRadius: BorderRadius.circular(8),
-        ),
-        child: Icon(
-          icon,
-          color: isDestructive ? Colors.red : Colors.orange,
-        ),
-      ),
-      title: Text(
-        title,
-        style: TextStyle(
-          fontWeight: FontWeight.w600,
-          color: isDestructive ? Colors.red : Colors.orange,
-        ),
-      ),
-      onTap: onTap,
     );
   }
 }

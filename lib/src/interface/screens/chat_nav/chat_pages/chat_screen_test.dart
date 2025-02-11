@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
+import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
+import 'package:flutter/foundation.dart' as foundation;
 import 'package:pravasitax_flutter/src/core/theme/app_theme.dart';
 import 'package:pravasitax_flutter/src/data/models/chat_model.dart';
 import 'package:pravasitax_flutter/src/data/providers/chat_provider.dart';
@@ -9,18 +11,24 @@ import 'package:pravasitax_flutter/src/data/services/secure_storage_service.dart
 import 'package:pravasitax_flutter/src/interface/screens/chat_nav/chat_pages/chat_info.dart';
 
 class IndividualPage extends ConsumerStatefulWidget {
-  IndividualPage(
-      {super.key,
-      required this.title,
-      required this.imageUrl,
-      required this.conversationId,
-      required this.userId,
-      required this.userToken});
+  static const Color primaryColor = Color(0xFFF8B50C);
+  static const Color secondaryColor = Color(0xFF05104F);
+
+  const IndividualPage({
+    super.key,
+    required this.title,
+    required this.imageUrl,
+    required this.conversationId,
+    required this.userId,
+    required this.userToken,
+  });
+
   final String title;
   final String userId;
   final String userToken;
   final String imageUrl;
   final String conversationId;
+
   @override
   _IndividualPageState createState() => _IndividualPageState();
 }
@@ -28,16 +36,23 @@ class IndividualPage extends ConsumerStatefulWidget {
 class _IndividualPageState extends ConsumerState<IndividualPage> {
   bool isBlocked = false;
   bool show = false;
-  FocusNode focusNode = FocusNode();
-  List<MessageModel> messages = [];
-  TextEditingController _controller = TextEditingController();
-  ScrollController _scrollController = ScrollController();
+  bool isEmojiVisible = false;
+  final FocusNode focusNode = FocusNode();
+  final List<MessageModel> messages = [];
+  final TextEditingController _controller = TextEditingController();
+  final ScrollController _scrollController = ScrollController();
 
   @override
   void initState() {
     super.initState();
     getMessageHistory();
-    print("GETTING PREVIOUS MESSAGES");
+    focusNode.addListener(() {
+      if (focusNode.hasFocus) {
+        setState(() {
+          isEmojiVisible = false;
+        });
+      }
+    });
   }
 
   Future<void> _sendMessage() async {
@@ -64,7 +79,10 @@ class _IndividualPageState extends ConsumerState<IndividualPage> {
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Failed to send message: $e')),
+          SnackBar(
+            content: Text('Failed to send message: $e'),
+            backgroundColor: Colors.red,
+          ),
         );
       }
     }
@@ -109,6 +127,25 @@ class _IndividualPageState extends ConsumerState<IndividualPage> {
     });
   }
 
+  void onEmojiSelected(Category? category, Emoji emoji) {
+    _controller
+      ..text += emoji.emoji
+      ..selection = TextSelection.fromPosition(
+        TextPosition(offset: _controller.text.length),
+      );
+  }
+
+  void toggleEmojiPicker() {
+    setState(() {
+      isEmojiVisible = !isEmojiVisible;
+      if (isEmojiVisible) {
+        focusNode.unfocus();
+      } else {
+        focusNode.requestFocus();
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final messageStream = ref.watch(messageStreamProvider);
@@ -131,353 +168,340 @@ class _IndividualPageState extends ConsumerState<IndividualPage> {
           ref.invalidate(conversationMessagesProvider);
         }
       },
-      child: Stack(
-        children: [
-          GestureDetector(
-            onTap: () {
-              FocusManager.instance.primaryFocus?.unfocus();
-            },
-            child: Scaffold(
-              backgroundColor: const Color(0xFFFCFCFC),
-              appBar: PreferredSize(
-                  preferredSize: const Size.fromHeight(60),
-                  child: AppBar(
-                    elevation: 1,
-                    shadowColor: Colors.white,
-                    backgroundColor: AppPalette.kPrimaryColor.withOpacity(.47),
-                    leadingWidth: 90,
-                    titleSpacing: 0,
-                    leading: Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        const SizedBox(width: 10),
-                        IconButton(
-                          onPressed: () {
-                            Navigator.pop(context);
-                          },
-                          icon: Icon(
-                            Icons.arrow_back_ios,
+      child: GestureDetector(
+        onTap: () {
+          if (isEmojiVisible) {
+            setState(() {
+              isEmojiVisible = false;
+            });
+          }
+        },
+        child: Scaffold(
+          backgroundColor: Colors.grey[50],
+          appBar: AppBar(
+            elevation: 0,
+            backgroundColor: Colors.white,
+            leading: IconButton(
+              icon: const Icon(Icons.arrow_back,
+                  color: IndividualPage.secondaryColor),
+              onPressed: () => Navigator.pop(context),
+            ),
+            title: Row(
+              children: [
+                Container(
+                  width: 40,
+                  height: 40,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    border: Border.all(
+                      color: IndividualPage.primaryColor.withOpacity(0.2),
+                      width: 2,
+                    ),
+                  ),
+                  child: ClipOval(
+                    child: Image.network(
+                      widget.imageUrl,
+                      fit: BoxFit.cover,
+                      errorBuilder: (context, error, stackTrace) {
+                        return Container(
+                          color: IndividualPage.primaryColor.withOpacity(0.1),
+                          child: Icon(
+                            Icons.person,
+                            color: IndividualPage.primaryColor,
                             size: 24,
                           ),
-                        ),
-                        ClipOval(
-                          child: Container(
-                            width: 30,
-                            height: 30,
-                            color: const Color.fromARGB(255, 255, 255, 255),
-                            child: Image.network(
-                              widget.imageUrl,
-                              fit: BoxFit.cover,
-                              errorBuilder: (context, error, stackTrace) {
-                                return SvgPicture.asset(
-                                    'assets/icons/dummy_person_small.svg');
-                              },
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    title: GestureDetector(
-                      onTap: () {
-                        // Navigator.push(
-                        //   context,
-                        //   MaterialPageRoute(
-                        //     builder: (context) => ChatInfo(
-                        //       conversationId: widget.conversationId,
-                        //       title: widget.title,
-                        //       imageUrl: widget.imageUrl,
-                        //     ),
-                        //   ),
-                        // );
+                        );
                       },
-                      child: Row(
-                        children: [
-                          SizedBox(
-                            width: 10,
-                          ),
-                          Text(
-                            ' ${widget.title ?? ''}',
-                            style: const TextStyle(fontSize: 18),
-                          ),
-                        ],
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        widget.title,
+                        style: const TextStyle(
+                          color: IndividualPage.secondaryColor,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+            actions: [
+              IconButton(
+                icon: const Icon(Icons.more_vert,
+                    color: IndividualPage.secondaryColor),
+                onPressed: () {},
+              ),
+            ],
+          ),
+          body: SafeArea(
+            child: Column(
+              children: [
+                Expanded(
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: const BorderRadius.only(
+                        topLeft: Radius.circular(30),
+                        topRight: Radius.circular(30),
                       ),
                     ),
-                  )),
-              body: Stack(
-                children: [
-                  Container(
-                    height: MediaQuery.of(context).size.height,
-                    width: MediaQuery.of(context).size.width,
-                    child: PopScope(
-                      child: Column(
-                        children: [
-                          Expanded(
-                            child: Padding(
-                              padding:
-                                  EdgeInsets.only(left: 20, right: 20, top: 10),
-                              child: ListView.builder(
-                                reverse: true,
-                                controller: _scrollController,
-                                itemCount: messages.length,
-                                itemBuilder: (context, index) {
-                                  final message = messages[messages.length -
-                                      1 -
-                                      index]; // Reverse the index to get the latest message first
-                                  final isSent =
-                                      message.senderId == widget.userId;
-                                  return Align(
-                                    alignment: isSent
-                                        ? Alignment.centerRight
-                                        : Alignment.centerLeft,
-                                    child: Container(
-                                      margin: const EdgeInsets.symmetric(
-                                          vertical: 4),
-                                      padding: const EdgeInsets.all(12),
-                                      decoration: BoxDecoration(
-                                        color: isSent
-                                            ? Colors.amber.shade100
-                                            : Colors.grey.shade200,
-                                        borderRadius: BorderRadius.only(
-                                          topLeft: Radius.circular(12),
-                                          topRight: Radius.circular(12),
-                                          bottomLeft: isSent
-                                              ? Radius.circular(12)
-                                              : Radius.circular(4),
-                                          bottomRight: isSent
-                                              ? Radius.circular(4)
-                                              : Radius.circular(12),
+                    child: ListView.builder(
+                      reverse: true,
+                      controller: _scrollController,
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 16, vertical: 20),
+                      itemCount: messages.length,
+                      itemBuilder: (context, index) {
+                        final message = messages[messages.length - 1 - index];
+                        final isSent = message.senderId == widget.userId;
+                        return Padding(
+                          padding: const EdgeInsets.only(bottom: 16),
+                          child: Row(
+                            mainAxisAlignment: isSent
+                                ? MainAxisAlignment.end
+                                : MainAxisAlignment.start,
+                            children: [
+                              if (!isSent) ...[
+                                Container(
+                                  width: 28,
+                                  height: 28,
+                                  margin: const EdgeInsets.only(right: 8),
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    border: Border.all(
+                                      color: IndividualPage.primaryColor
+                                          .withOpacity(0.2),
+                                      width: 1,
+                                    ),
+                                  ),
+                                  child: ClipOval(
+                                    child: Image.network(
+                                      widget.imageUrl,
+                                      fit: BoxFit.cover,
+                                      errorBuilder:
+                                          (context, error, stackTrace) {
+                                        return Container(
+                                          color: IndividualPage.primaryColor
+                                              .withOpacity(0.1),
+                                          child: Icon(
+                                            Icons.person,
+                                            color: IndividualPage.primaryColor,
+                                            size: 16,
+                                          ),
+                                        );
+                                      },
+                                    ),
+                                  ),
+                                ),
+                              ],
+                              Flexible(
+                                child: Container(
+                                  constraints: BoxConstraints(
+                                    maxWidth:
+                                        MediaQuery.of(context).size.width *
+                                            0.75,
+                                  ),
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 16,
+                                    vertical: 12,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: isSent
+                                        ? IndividualPage.primaryColor
+                                            .withOpacity(0.1)
+                                        : Colors.grey[100],
+                                    borderRadius: BorderRadius.only(
+                                      topLeft: const Radius.circular(20),
+                                      topRight: const Radius.circular(20),
+                                      bottomLeft:
+                                          Radius.circular(isSent ? 20 : 0),
+                                      bottomRight:
+                                          Radius.circular(isSent ? 0 : 20),
+                                    ),
+                                  ),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        message.content,
+                                        style: TextStyle(
+                                          fontSize: 15,
+                                          color: isSent
+                                              ? IndividualPage.secondaryColor
+                                              : Colors.black87,
                                         ),
                                       ),
-                                      child: Column(
-                                        crossAxisAlignment: isSent
-                                            ? CrossAxisAlignment.end
-                                            : CrossAxisAlignment.start,
+                                      const SizedBox(height: 4),
+                                      Row(
                                         mainAxisSize: MainAxisSize.min,
                                         children: [
                                           Text(
-                                            message.content,
-                                            style: const TextStyle(
-                                              fontSize: 16,
-                                              color: Colors.black87,
-                                            ),
-                                          ),
-                                          const SizedBox(height: 4),
-                                          Text(
                                             _formatTime(message.createdAt),
                                             style: TextStyle(
-                                              fontSize: 12,
+                                              fontSize: 11,
                                               color: Colors.grey[600],
                                             ),
                                           ),
+                                          if (isSent) ...[
+                                            const SizedBox(width: 4),
+                                            Icon(
+                                              message.isRead
+                                                  ? Icons.done_all
+                                                  : Icons.done,
+                                              size: 14,
+                                              color: message.isRead
+                                                  ? Colors.blue
+                                                  : Colors.grey[600],
+                                            ),
+                                          ],
                                         ],
-                                      ),
-                                    ),
-                                  );
-                                },
-                              ),
-                            ),
-                          ),
-                          isBlocked
-                              ? Container(
-                                  width: double.infinity,
-                                  padding: const EdgeInsets.symmetric(
-                                    vertical: 20,
-                                  ),
-                                  decoration: const BoxDecoration(
-                                    color: Color(0xFF004797),
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: Colors.black26,
-                                        blurRadius: 10,
-                                        offset: Offset(4, 4),
                                       ),
                                     ],
                                   ),
-                                  child: const Center(
-                                    child: Text(
-                                      'This user is blocked',
-                                      style: TextStyle(
-                                        fontSize: 20,
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.white,
-                                        letterSpacing: 1.5,
-                                        shadows: [
-                                          // Shadow(
-                                          //   color: Colors.black45,
-                                          //   blurRadius: 5,
-                                          //   offset: Offset(2, 2),
-                                          // ),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                )
-                              : Align(
-                                  alignment: Alignment.bottomCenter,
-                                  child: Container(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 8.0, vertical: 5.0),
-                                    color: Colors.white,
-                                    child: Row(
-                                      children: [
-                                        Expanded(
-                                          child: Card(
-                                            elevation: 1,
-                                            color: Colors.white,
-                                            shape: RoundedRectangleBorder(
-                                              side: const BorderSide(
-                                                color: Color.fromARGB(
-                                                    255, 220, 215, 215),
-                                                width: 0.5,
-                                              ),
-                                              borderRadius:
-                                                  BorderRadius.circular(15.0),
-                                            ),
-                                            child: Padding(
-                                              padding:
-                                                  const EdgeInsets.symmetric(
-                                                      horizontal: 8.0,
-                                                      vertical: 5.0),
-                                              child: Container(
-                                                constraints:
-                                                    const BoxConstraints(
-                                                  maxHeight:
-                                                      150, // Limit the height
-                                                ),
-                                                child: Scrollbar(
-                                                  thumbVisibility: true,
-                                                  child: SingleChildScrollView(
-                                                    scrollDirection:
-                                                        Axis.vertical,
-                                                    reverse:
-                                                        true, // Start from bottom
-                                                    child: TextField(
-                                                      controller: _controller,
-                                                      focusNode: focusNode,
-                                                      keyboardType:
-                                                          TextInputType
-                                                              .multiline,
-                                                      maxLines:
-                                                          null, // Allows for unlimited lines
-                                                      minLines:
-                                                          1, // Starts with a single line
-                                                      decoration:
-                                                          const InputDecoration(
-                                                        border:
-                                                            InputBorder.none,
-                                                        hintText:
-                                                            "Type a message",
-                                                        contentPadding:
-                                                            EdgeInsets
-                                                                .symmetric(
-                                                                    horizontal:
-                                                                        10),
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                        Padding(
-                                          padding: const EdgeInsets.only(
-                                            right: 2,
-                                            left: 2,
-                                          ),
-                                          child: Container(
-                                            decoration: BoxDecoration(
-                                                color: AppPalette.kPrimaryColor,
-                                                borderRadius:
-                                                    BorderRadius.circular(5)),
-                                            child: IconButton(
-                                              icon: const Icon(
-                                                Icons.send,
-                                                color: Colors.black,
-                                              ),
-                                              onPressed: () {
-                                                _sendMessage();
-                                              },
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                )
-                        ],
-                      ),
-                      onPopInvoked: (didPop) {
-                        if (didPop) {
-                          if (show) {
-                            setState(() {
-                              show = false;
-                            });
-                          } else {
-                            focusNode.unfocus();
-                            WidgetsBinding.instance.addPostFrameCallback((_) {
-                              if (Navigator.canPop(context)) {
-                                Navigator.pop(context);
-                              }
-                            });
-                          }
-                        }
+                                ),
+                              ),
+                            ],
+                          ),
+                        );
                       },
                     ),
                   ),
-                ],
-              ),
+                ),
+                Container(
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.05),
+                        blurRadius: 10,
+                        offset: const Offset(0, -5),
+                      ),
+                    ],
+                  ),
+                  child: Column(
+                    children: [
+                      Padding(
+                        padding: EdgeInsets.fromLTRB(
+                          16,
+                          12,
+                          16,
+                          12 +
+                              (isEmojiVisible
+                                  ? 0
+                                  : MediaQuery.of(context).padding.bottom),
+                        ),
+                        child: Row(
+                          children: [
+                            Expanded(
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  color: Colors.grey[100],
+                                  borderRadius: BorderRadius.circular(24),
+                                ),
+                                child: Row(
+                                  children: [
+                                    IconButton(
+                                      icon: Icon(
+                                        isEmojiVisible
+                                            ? Icons.keyboard
+                                            : Icons.emoji_emotions_outlined,
+                                        color: isEmojiVisible
+                                            ? IndividualPage.primaryColor
+                                            : Colors.grey[600],
+                                      ),
+                                      onPressed: toggleEmojiPicker,
+                                    ),
+                                    Expanded(
+                                      child: TextField(
+                                        controller: _controller,
+                                        focusNode: focusNode,
+                                        maxLines: null,
+                                        decoration: const InputDecoration(
+                                          hintText: 'Type a message...',
+                                          border: InputBorder.none,
+                                          contentPadding: EdgeInsets.symmetric(
+                                            horizontal: 16,
+                                            vertical: 10,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                            const SizedBox(width: 8),
+                            Container(
+                              decoration: const BoxDecoration(
+                                color: IndividualPage.primaryColor,
+                                shape: BoxShape.circle,
+                              ),
+                              child: IconButton(
+                                icon:
+                                    const Icon(Icons.send, color: Colors.white),
+                                onPressed: _sendMessage,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      if (isEmojiVisible)
+                        Container(
+                          height: 250,
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: const BorderRadius.vertical(
+                              top: Radius.circular(20),
+                            ),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withOpacity(0.1),
+                                blurRadius: 10,
+                                offset: const Offset(0, -5),
+                              ),
+                            ],
+                          ),
+                          child: ClipRRect(
+                            borderRadius: const BorderRadius.vertical(
+                              top: Radius.circular(20),
+                            ),
+                            child: EmojiPicker(
+                              onEmojiSelected: (category, emoji) {
+                                onEmojiSelected(category, emoji);
+                              },
+                              onBackspacePressed: () {
+                                if (_controller.text.isNotEmpty) {
+                                  _controller
+                                    ..text = _controller.text.characters
+                                        .skipLast(1)
+                                        .toString()
+                                    ..selection = TextSelection.fromPosition(
+                                      TextPosition(
+                                          offset: _controller.text.length),
+                                    );
+                                }
+                              },
+                              textEditingController: _controller,
+                              config: Config(
+                                height: 250,
+                              ),
+                            ),
+                          ),
+                        ),
+                    ],
+                  ),
+                ),
+              ],
             ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget bottomSheet() {
-    return Container(
-      height: 278,
-      width: MediaQuery.of(context).size.width,
-      child: Card(
-        margin: const EdgeInsets.all(18.0),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 20),
-          child: Column(
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  iconCreation(
-                      Icons.insert_drive_file, Colors.indigo, "Document"),
-                  const SizedBox(
-                    width: 40,
-                  ),
-                  iconCreation(Icons.camera_alt, Colors.pink, "Camera"),
-                  const SizedBox(
-                    width: 40,
-                  ),
-                  iconCreation(Icons.insert_photo, Colors.purple, "Gallery"),
-                ],
-              ),
-              const SizedBox(
-                height: 30,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  iconCreation(Icons.headset, Colors.orange, "Audio"),
-                  const SizedBox(
-                    width: 40,
-                  ),
-                  iconCreation(Icons.location_pin, Colors.teal, "Location"),
-                  const SizedBox(
-                    width: 40,
-                  ),
-                  iconCreation(Icons.person, Colors.blue, "Contact"),
-                ],
-              ),
-            ],
           ),
         ),
       ),
@@ -486,42 +510,15 @@ class _IndividualPageState extends ConsumerState<IndividualPage> {
 
   String _formatTime(DateTime dateTime) {
     final now = DateTime.now();
-    final difference = now.difference(dateTime);
+    final today = DateTime(now.year, now.month, now.day);
+    final messageDate = DateTime(dateTime.year, dateTime.month, dateTime.day);
 
-    if (difference.inMinutes < 60) {
-      return '${difference.inMinutes}m ago';
-    } else if (difference.inHours < 24) {
-      return '${difference.inHours}h ago';
+    if (messageDate == today) {
+      return DateFormat('HH:mm').format(dateTime);
+    } else if (messageDate == today.subtract(const Duration(days: 1))) {
+      return 'Yesterday';
     } else {
-      return '${difference.inDays}d ago';
+      return DateFormat('MMM d').format(dateTime);
     }
-  }
-
-  Widget iconCreation(IconData icons, Color color, String text) {
-    return InkWell(
-      onTap: () {},
-      child: Column(
-        children: [
-          CircleAvatar(
-            radius: 30,
-            backgroundColor: color,
-            child: Icon(
-              icons,
-              size: 29,
-              color: Colors.white,
-            ),
-          ),
-          const SizedBox(
-            height: 5,
-          ),
-          Text(
-            text,
-            style: const TextStyle(
-              fontSize: 12,
-            ),
-          )
-        ],
-      ),
-    );
   }
 }
