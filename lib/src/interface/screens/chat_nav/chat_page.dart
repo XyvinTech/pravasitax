@@ -32,6 +32,8 @@ class ChatPage extends StatelessWidget {
                 padding:
                     const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                 indicatorSize: TabBarIndicatorSize.tab,
+                indicatorColor: Colors.transparent,
+                dividerColor: Colors.transparent,
                 indicator: BoxDecoration(
                   color: primaryColor.withOpacity(0.1),
                   borderRadius: BorderRadius.circular(12),
