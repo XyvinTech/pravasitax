@@ -9,11 +9,13 @@ import 'package:url_launcher/url_launcher.dart';
 import 'dart:developer' as developer;
 import 'package:pravasitax_flutter/src/interface/screens/common/webview_screen.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:pravasitax_flutter/src/interface/screens/i_hub_nav/hub_page.dart';
+import 'package:pravasitax_flutter/src/data/models/event_model.dart';
 
 class HomePage extends ConsumerStatefulWidget {
-
-
-  const HomePage({super.key,});
+  const HomePage({
+    super.key,
+  });
 
   @override
   ConsumerState<HomePage> createState() => _HomePageState();
@@ -477,7 +479,7 @@ class _HomePageState extends ConsumerState<HomePage> {
               ),
               const SizedBox(height: 24),
               // Event Section
-        
+
               if (data.event != null)
                 _buildEventCard(
                   context: context,
@@ -673,6 +675,22 @@ class _HomePageState extends ConsumerState<HomePage> {
     required String imageUrl,
     required String price,
   }) {
+    // Create an Event object from the provided data
+    final event = Event(
+      id: '', // Since this is from homepage, we might not have the ID
+      title: title,
+      description: description,
+      date: DateTime.now(), // You should parse the date string properly
+      time: time,
+      type: tag,
+      price: double.tryParse(price.replaceAll(RegExp(r'[^\d.]'), '')) ?? 0.0,
+      availableSeats: 1, // Default value
+      speakers: [], // Empty list since we don't have speakers data in homepage
+      venue: description, // Using description as venue
+      thumbnail: imageUrl,
+      status: isLive ? 'LIVE' : 'UPCOMING', // Set status based on isLive flag
+    );
+
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -774,7 +792,12 @@ class _HomePageState extends ConsumerState<HomePage> {
           // Join Now button
           ElevatedButton(
             onPressed: () {
-              
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => EventDetailPage(event: event),
+                ),
+              );
             },
             style: ElevatedButton.styleFrom(
               backgroundColor: Colors.amber[800],
