@@ -16,6 +16,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pravasitax_flutter/src/data/providers/news_provider.dart';
 import 'package:pravasitax_flutter/src/data/providers/auth_provider.dart';
 import 'package:pravasitax_flutter/src/data/providers/customer_provider.dart';
+import 'package:pravasitax_flutter/src/interface/widgets/loading_indicator.dart';
 
 class MainPage extends ConsumerStatefulWidget {
   @override
@@ -188,6 +189,7 @@ class _MainPageState extends ConsumerState<MainPage> {
     final hasNewsAsync = ref.watch(hasNewsProvider);
 
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: Colors.white,
         scrolledUnderElevation: 0,
@@ -248,11 +250,13 @@ class _MainPageState extends ConsumerState<MainPage> {
       ),
       body: _widgetOptions.isNotEmpty
           ? _widgetOptions[_getAdjustedIndex(_selectedIndex)]
-          : Center(child: CircularProgressIndicator()),
+          : Center(child: LoadingIndicator()),
       bottomNavigationBar: hasNewsAsync.when(
         data: (hasNews) => BottomNavigationBar(
+          backgroundColor: Colors.white,
           items: [
             BottomNavigationBarItem(
+              backgroundColor: Colors.white,
               icon: _buildNavBarIcon(
                 'assets/icons/home_active.svg',
                 'assets/icons/home_inactive.svg',
@@ -262,6 +266,7 @@ class _MainPageState extends ConsumerState<MainPage> {
             ),
             if (hasNews)
               BottomNavigationBarItem(
+                backgroundColor: Colors.white,
                 icon: _buildNavBarIcon(
                   'assets/icons/feed_active.svg',
                   'assets/icons/feed_inactive.svg',
@@ -270,6 +275,7 @@ class _MainPageState extends ConsumerState<MainPage> {
                 label: 'Feed',
               ),
             BottomNavigationBarItem(
+              backgroundColor: Colors.white,
               icon: _buildNavBarIcon(
                 'assets/icons/ihub_active.svg',
                 'assets/icons/ihub_inactive.svg',
@@ -278,6 +284,7 @@ class _MainPageState extends ConsumerState<MainPage> {
               label: 'I-Hub',
             ),
             BottomNavigationBarItem(
+              backgroundColor: Colors.white,
               icon: _buildNavBarIcon(
                 'assets/icons/forum_active.svg',
                 'assets/icons/forum_inactive.svg',
@@ -286,6 +293,7 @@ class _MainPageState extends ConsumerState<MainPage> {
               label: 'Forum',
             ),
             BottomNavigationBarItem(
+              backgroundColor: Colors.white,
               icon: _buildNavBarIcon(
                 'assets/icons/chat_active.svg',
                 'assets/icons/chat_inactive.svg',

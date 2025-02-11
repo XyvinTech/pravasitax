@@ -9,7 +9,7 @@ import 'package:pravasitax_flutter/src/data/services/initialize_notifications.da
 import 'dart:developer' as developer;
 import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:pravasitax_flutter/src/data/services/secure_storage_service.dart';
-
+import 'package:pravasitax_flutter/src/interface/widgets/loading_indicator.dart';
 class LoginFrontPage extends ConsumerStatefulWidget {
   const LoginFrontPage({Key? key}) : super(key: key);
 
@@ -124,7 +124,7 @@ class _LoginFrontPageState extends ConsumerState<LoginFrontPage> {
                                 minimumSize: const Size(double.infinity, 50),
                               ),
                               child: _isLoading
-                                  ? const CircularProgressIndicator()
+                                  ? const LoadingIndicator()
                                   : const Text('Get OTP'),
                             ),
                           ],
@@ -374,7 +374,7 @@ class _LoginFrontPageState extends ConsumerState<LoginFrontPage> {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: const [
-                CircularProgressIndicator(),
+                LoadingIndicator(),
                 SizedBox(height: 15),
                 Text('Verifying OTP...'),
               ],

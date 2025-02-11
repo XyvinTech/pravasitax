@@ -11,6 +11,7 @@ import 'package:pravasitax_flutter/src/data/models/event_model.dart';
 import 'package:intl/intl.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import 'package:flutter/services.dart';
+import 'package:pravasitax_flutter/src/interface/widgets/loading_indicator.dart';
 
 // Add this utility function at the top of the file, outside any class
 String _getMonthName(int month) {
@@ -65,15 +66,17 @@ class _HubPageState extends ConsumerState<HubPage>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       body: Column(
         children: [
           Container(
             color: Colors.white,
             child: TabBar(
+              indicatorSize: TabBarIndicatorSize.tab,
               controller: _tabController,
-              labelColor: Colors.black,
+              labelColor: Color(0xFF05104F),
               unselectedLabelColor: Colors.grey,
-              indicatorColor: Color(0xFFF9B406),
+              indicatorColor: Color(0xFF05104F),
               indicatorWeight: 3,
               labelStyle: TextStyle(
                 fontSize: 14,
@@ -118,7 +121,7 @@ class BlogsSection extends ConsumerWidget {
         ref.read(articlesListProvider.notifier).refresh();
       },
       child: isLoading
-          ? const Center(child: CircularProgressIndicator())
+          ? const Center(child: LoadingIndicator())
           : SingleChildScrollView(
               controller: scrollController,
               padding: EdgeInsets.all(16),
@@ -175,7 +178,7 @@ class BlogsSection extends ConsumerWidget {
                         child: SizedBox(
                           width: 24,
                           height: 24,
-                          child: CircularProgressIndicator(strokeWidth: 2),
+                          child: LoadingIndicator(),
                         ),
                       ),
                     ),
@@ -303,18 +306,6 @@ class EventsSection extends ConsumerWidget {
       padding: EdgeInsets.all(16),
       child: Column(
         children: [
-          TextField(
-            decoration: InputDecoration(
-              hintText: 'Search Events',
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(8),
-                borderSide: BorderSide(color: Color(0xFFD4D4D4), width: 0.5),
-              ),
-              filled: true,
-              fillColor: Colors.white,
-              prefixIcon: Icon(Icons.search),
-            ),
-          ),
           SizedBox(height: 16),
           eventsAsync.when(
             data: (events) => Column(
@@ -329,7 +320,7 @@ class EventsSection extends ConsumerWidget {
                       ))
                   .toList(),
             ),
-            loading: () => Center(child: CircularProgressIndicator()),
+            loading: () => Center(child: LoadingIndicator()),
             error: (error, stack) => Center(
               child: Text('Error loading events: $error'),
             ),
@@ -350,11 +341,15 @@ class EventsSection extends ConsumerWidget {
         Stack(
           children: [
             if (event.thumbnail != null)
-              Image.network(
-                event.thumbnail!,
-                height: 200,
-                width: double.infinity,
-                fit: BoxFit.cover,
+              ClipRRect(
+                borderRadius:
+                    BorderRadius.circular(5), // Adjust the radius as needed
+                child: Image.network(
+                  event.thumbnail!,
+                  height: 200,
+                  width: double.infinity,
+                  fit: BoxFit.cover,
+                ),
               )
             else
               Container(
@@ -454,15 +449,15 @@ class EventsSection extends ConsumerWidget {
           event.title,
           style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
         ),
-        SizedBox(height: 8),
+        if (event.description != '') SizedBox(height: 8),
         Text(
           event.description,
           style: TextStyle(fontSize: 14, color: Colors.grey[600]),
         ),
-        SizedBox(height: 16),
+        if (event.description != '') SizedBox(height: 16),
         ElevatedButton(
           style: ElevatedButton.styleFrom(
-            backgroundColor: Color(0xFFF9B406),
+            backgroundColor: Color(0xFFF8B50C),
             padding: EdgeInsets.symmetric(vertical: 10, horizontal: 24),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(4),

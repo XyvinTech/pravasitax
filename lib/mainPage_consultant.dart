@@ -13,6 +13,7 @@ import 'package:pravasitax_flutter/src/interface/screens/main_pages/home_page.da
 import 'package:pravasitax_flutter/src/interface/screens/main_pages/notification.dart';
 import 'package:pravasitax_flutter/src/interface/screens/main_pages/profile_page.dart'; // Import ProfilePage
 import 'package:pravasitax_flutter/src/data/services/secure_storage_service.dart';
+import 'package:pravasitax_flutter/src/interface/widgets/loading_indicator.dart';
 
 class MainPageConsultantPage extends ConsumerStatefulWidget {
   @override
@@ -131,7 +132,7 @@ class _MainPageConsultantState extends ConsumerState<MainPageConsultantPage> {
       ),
       body: _widgetOptions.isNotEmpty
           ? _widgetOptions[_selectedIndex]
-          : Center(child: CircularProgressIndicator()),
+          : Center(child: LoadingIndicator()),
       bottomNavigationBar: BottomNavigationBar(
         items: [
           BottomNavigationBarItem(

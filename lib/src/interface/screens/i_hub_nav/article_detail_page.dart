@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_html/flutter_html.dart';
 import '../../../data/providers/articles_provider.dart';
-
+import 'package:pravasitax_flutter/src/interface/widgets/loading_indicator.dart';
 class ArticleDetailPage extends ConsumerWidget {
   final String articleId;
 
@@ -123,7 +123,7 @@ class ArticleDetailPage extends ConsumerWidget {
             ],
           ),
         ),
-        loading: () => Center(child: CircularProgressIndicator()),
+        loading: () => Center(child: LoadingIndicator()),
         error: (error, stack) => Center(
           child: Text('Error loading article: $error'),
         ),

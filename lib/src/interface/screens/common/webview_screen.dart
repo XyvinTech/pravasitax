@@ -7,7 +7,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pravasitax_flutter/src/data/providers/chat_provider.dart';
 import 'package:pravasitax_flutter/src/interface/screens/chat_nav/chat_pages/chat_screen.dart';
 import 'package:pravasitax_flutter/src/data/services/secure_storage_service.dart';
-
+import 'package:pravasitax_flutter/src/interface/widgets/loading_indicator.dart';
 class WebViewScreen extends ConsumerStatefulWidget {
   final String url;
   final String title;
@@ -49,7 +49,7 @@ class _WebViewScreenState extends ConsumerState<WebViewScreen> {
       (controller.platform as AndroidWebViewController)
           .setMediaPlaybackRequiresUserGesture(false);
     }
-  controller.enableZoom(false);
+    controller.enableZoom(false);
 
     controller
       ..setJavaScriptMode(JavaScriptMode.unrestricted)
@@ -84,7 +84,6 @@ class _WebViewScreenState extends ConsumerState<WebViewScreen> {
         ),
       )
       ..loadRequest(Uri.parse(widget.url));
-  
   }
 
   // Add click handlers for service buttons
@@ -126,14 +125,16 @@ class _WebViewScreenState extends ConsumerState<WebViewScreen> {
         conversationId: conversation.id,
         message: 'Hi, I would like to know more about ${serviceName}.',
       )).future);
- 
-    final userId = await SecureStorageService.getUserId();
+
+      final userId = await SecureStorageService.getUserId();
 
       if (mounted) {
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
-            builder: (context) => IndividualPage(userId:userId??'' , userToken: userToken??'',
+            builder: (context) => IndividualPage(
+              userId: userId ?? '',
+              userToken: userToken ?? '',
               title: serviceName,
               imageUrl: 'https://pravasitax.com/assets/images/logo.png',
               conversationId: conversation.id,
@@ -205,7 +206,7 @@ class _WebViewScreenState extends ConsumerState<WebViewScreen> {
           WebViewWidget(controller: controller),
           if (isLoading)
             const Center(
-              child: CircularProgressIndicator(),
+              child: LoadingIndicator(),
             ),
         ],
       ),

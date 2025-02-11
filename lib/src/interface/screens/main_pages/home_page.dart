@@ -9,11 +9,11 @@ import 'package:url_launcher/url_launcher.dart';
 import 'dart:developer' as developer;
 import 'package:pravasitax_flutter/src/interface/screens/common/webview_screen.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-
+import 'package:pravasitax_flutter/src/interface/widgets/loading_indicator.dart';
 class HomePage extends ConsumerStatefulWidget {
-
-
-  const HomePage({super.key,});
+  const HomePage({
+    super.key,
+  });
 
   @override
   ConsumerState<HomePage> createState() => _HomePageState();
@@ -64,7 +64,7 @@ class _HomePageState extends ConsumerState<HomePage> {
     if (homeState.isLoading) {
       developer.log('HomePage is in loading state', name: 'HomePage');
       return const Scaffold(
-        body: Center(child: CircularProgressIndicator()),
+        body: Center(child: LoadingIndicator()),
       );
     }
 
@@ -87,6 +87,7 @@ class _HomePageState extends ConsumerState<HomePage> {
     developer.log('HomePage data loaded successfully', name: 'HomePage');
 
     return Scaffold(
+      backgroundColor: Colors.white,
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
@@ -121,7 +122,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                                 placeholder: (context, url) => Container(
                                   color: Colors.grey[200],
                                   child: const Center(
-                                    child: CircularProgressIndicator(),
+                                    child: LoadingIndicator(),
                                   ),
                                 ),
                                 errorWidget: (context, url, error) => Container(
@@ -315,7 +316,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                                 placeholder: (context, url) => Container(
                                   color: Colors.grey[200],
                                   child: const Center(
-                                    child: CircularProgressIndicator(),
+                                    child: LoadingIndicator(),
                                   ),
                                 ),
                                 errorWidget: (context, url, error) => Container(
@@ -477,7 +478,7 @@ class _HomePageState extends ConsumerState<HomePage> {
               ),
               const SizedBox(height: 24),
               // Event Section
-        
+
               if (data.event != null)
                 _buildEventCard(
                   context: context,
@@ -549,8 +550,8 @@ class _HomePageState extends ConsumerState<HomePage> {
                       child: SizedBox(
                         width: 24,
                         height: 24,
-                        child: CircularProgressIndicator(
-                          strokeWidth: 2,
+                        child: LoadingIndicator(
+                       
                         ),
                       ),
                     ),
@@ -637,8 +638,8 @@ class _HomePageState extends ConsumerState<HomePage> {
                   width: 36,
                   height: 36,
                   child: Center(
-                    child: CircularProgressIndicator(
-                      strokeWidth: 2,
+                    child: LoadingIndicator(
+             
                     ),
                   ),
                 ),
@@ -702,7 +703,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                     height: 150,
                     color: Colors.grey[300],
                     child: const Center(
-                      child: CircularProgressIndicator(),
+                      child: LoadingIndicator(),
                     ),
                   ),
                   errorWidget: (context, url, error) => Container(
@@ -773,9 +774,7 @@ class _HomePageState extends ConsumerState<HomePage> {
 
           // Join Now button
           ElevatedButton(
-            onPressed: () {
-              
-            },
+            onPressed: () {},
             style: ElevatedButton.styleFrom(
               backgroundColor: Colors.amber[800],
               shape: RoundedRectangleBorder(
