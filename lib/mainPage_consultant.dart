@@ -121,8 +121,10 @@ class _MainPageConsultantState extends ConsumerState<MainPageConsultantPage> {
             child: Padding(
               padding: const EdgeInsets.all(8.0),
               child: CircleAvatar(
-                backgroundImage: NetworkImage(
-                  'https://example.com/profile_pic.png',
+                backgroundColor: Colors.grey[200],
+                child: Icon(
+                  Icons.person_outline_rounded,
+                  color: Colors.grey[600],
                 ),
                 radius: 20,
               ),
