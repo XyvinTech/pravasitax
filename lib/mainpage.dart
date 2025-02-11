@@ -254,7 +254,7 @@ class _MainPageState extends ConsumerState<MainPage> {
       bottomNavigationBar: hasNewsAsync.when(
         data: (hasNews) => BottomNavigationBar(
           items: [
-            BottomNavigationBarItem(
+            BottomNavigationBarItem(backgroundColor: Colors.white,
               icon: _buildNavBarIcon(
                 'assets/icons/home_active.svg',
                 'assets/icons/home_inactive.svg',
@@ -263,7 +263,7 @@ class _MainPageState extends ConsumerState<MainPage> {
               label: 'Home',
             ),
             if (hasNews)
-              BottomNavigationBarItem(
+              BottomNavigationBarItem(backgroundColor: Colors.white,
                 icon: _buildNavBarIcon(
                   'assets/icons/feed_active.svg',
                   'assets/icons/feed_inactive.svg',
@@ -271,7 +271,7 @@ class _MainPageState extends ConsumerState<MainPage> {
                 ),
                 label: 'Feed',
               ),
-            BottomNavigationBarItem(
+            BottomNavigationBarItem(backgroundColor: Colors.white,
               icon: _buildNavBarIcon(
                 'assets/icons/ihub_active.svg',
                 'assets/icons/ihub_inactive.svg',
@@ -279,7 +279,7 @@ class _MainPageState extends ConsumerState<MainPage> {
               ),
               label: 'I-Hub',
             ),
-            BottomNavigationBarItem(
+            BottomNavigationBarItem(backgroundColor: Colors.white,
               icon: _buildNavBarIcon(
                 'assets/icons/forum_active.svg',
                 'assets/icons/forum_inactive.svg',
@@ -287,7 +287,7 @@ class _MainPageState extends ConsumerState<MainPage> {
               ),
               label: 'Forum',
             ),
-            BottomNavigationBarItem(
+            BottomNavigationBarItem(backgroundColor: Colors.white,
               icon: _buildNavBarIcon(
                 'assets/icons/chat_active.svg',
                 'assets/icons/chat_inactive.svg',
