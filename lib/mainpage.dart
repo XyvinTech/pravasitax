@@ -188,7 +188,7 @@ class _MainPageState extends ConsumerState<MainPage> {
     final hasNewsAsync = ref.watch(hasNewsProvider);
 
     return Scaffold(
-      appBar: AppBar(
+      appBar: AppBar(automaticallyImplyLeading: false,
         backgroundColor: Colors.white,
         scrolledUnderElevation: 0,
         title: Row(

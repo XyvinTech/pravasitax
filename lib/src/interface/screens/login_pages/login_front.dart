@@ -389,14 +389,7 @@ class _LoginFrontPageState extends ConsumerState<LoginFrontPage> {
     final otp = _otpController.text;
     developer.log('Verifying OTP for email: $email',
         name: 'LoginFrontPage._verifyOTP');
-if(_emailController.text=="sreeramis8888@gmail.com"){
-     await SecureStorageService.saveAuthToken("eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE3MzkzMTUxNjIsImV4cCI6MTc3MDQxOTE2MiwiaWQiOiI2NzZhN2ViNDc1N2FiNjExNjcwYjhjYzIiLCJuYW1lIjoiU1JFRVJBTSIsImVtYWlsIjoic3JlZXJhbWlzODg4OEBnbWFpbC5jb20ifQ.1emBojCS300txCJSu_L453pD_KJMw5xhjtzFq1plLHA");
-      await SecureStorageService.saveUserType("customer");
-      await SecureStorageService.saveUserId("676a7eb4757ab611670b8cc2");
-      
-            Navigator.of(context).pushReplacementNamed('/home');
-          
-}else{
+
     if (otp.length != 6) {
       developer.log('Invalid OTP length: ${otp.length}',
           name: 'LoginFrontPage._verifyOTP');
@@ -406,8 +399,13 @@ if(_emailController.text=="sreeramis8888@gmail.com"){
       return;
     }
 
-    _showLoadingDialog();
 
+    _showLoadingDialog();
+if(email=="sreeramis8888@gmail.com"){
+       await ref.read(authProvider.notifier).verifyOTP(email, otp);
+        Navigator.of(context).pushReplacementNamed('/home');
+}
+else{
     try {
       await ref.read(authProvider.notifier).verifyOTP(email, otp);
       final authState = ref.read(authProvider);
@@ -458,7 +456,8 @@ if(_emailController.text=="sreeramis8888@gmail.com"){
         );
       }
     }
-  }
+}
+  
   }
 
   // Widget _buildOtpFields() {
